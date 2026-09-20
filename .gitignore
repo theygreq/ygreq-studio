@@ -1,0 +1,36 @@
+# --- macOS / editor noise ---
+.DS_Store
+.claude/
+*.command
+
+# --- internal working docs: keep local, never publish ---
+CLAUDE.md
+TODO.md
+PROJECT_BRIEF.md
+00-readme.md
+01-brand.md
+02-voice.md
+03-services.md
+04-site-structure.md
+05-copy-decisions.md
+06-case-studies.md
+07-yassen.md
+08-platform-and-build.md
+09-motion-and-interaction.md
+10-case-study-system.md
+assets/IMAGE-GUIDE.md
+Claude outputs/
+
+# --- backups and superseded files ---
+*.bak
+*.pre-edit.bak
+*.regressed.bak
+The Work - YGREQ.STUDIO (standalone).html
+
+# --- raw exports and rejects: huge, not served ---
+_originals/
+_to_delete/
+_candidates/
+
+# deploy notes (local reference)
+DEPLOY.md

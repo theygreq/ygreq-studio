@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>YGREQ.STUDIO — Visual creative practice, Sofia</title>
+  <meta name="description" content="YGREQ.STUDIO is a visual creative practice based in Sofia. Photography, creative direction, and brand identity for a handful of brands and institutions each year." />
+
+  <meta property="og:title" content="YGREQ.STUDIO" />
+  <meta property="og:description" content="A visual creative practice based in Sofia. Closing the gap between what a brand is and how it reads." />
+  <meta property="og:type" content="website" />
+
+  <!-- browser-chrome tint (Safari toolbar, iOS/Android address bar): this page's
+       field colour, matching the page-transition curtain that arrives on it.
+       Mirrors the tokens in styles.css :root — keep the two in step. -->
+  <meta name="theme-color" content="#1A1B15" /> <!-- black — the hero field -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Inter: body, labels, services. DM Sans 600: logotype only (.nav__mark, hero SVG, .footer__mark) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- page transition: paint the incoming curtain before the first paint, so the
+       page never flashes underneath it. See transition.js / .page-curtain. -->
+  <script>
+    (function () {
+      try {
+        var pt = sessionStorage.getItem('pt');
+        if (!pt) return;
+        sessionStorage.removeItem('pt');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.dataset.ptEnter = pt;
+      } catch (e) {}
+    }());
+  </script>
+</head>
+<body>
+
+  <!-- Page transition curtain — inert until transition.js drives it -->
+  <div class="page-curtain" aria-hidden="true"></div>
+
+  <!-- Section counter — updated by scroll.js -->
+  <div class="section-counter" id="sectionCounter" aria-hidden="true">
+    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">09</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="nav__mark" href="index.html">YGREQ.STUDIO</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="work.html">The Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- FULL-SCREEN MENU OVERLAY -->
+  <div id="menu-overlay" class="menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-overlay__curtain" aria-hidden="true"></div>
+    <div class="menu-overlay__inner">
+      <nav class="menu-overlay__nav" aria-label="Primary navigation">
+        <ul class="menu-overlay__list">
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
+                <span class="menu-item__idx" aria-hidden="true">01</span>
+                <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
+              </a>
+              <ul class="menu-item__children" aria-label="The Work — projects">
+                <li><a href="exemplary-home.html" class="menu-item__child-link" data-for="exemplary-home" data-category="exemplary-home">Exemplary Home</a></li>
+                <li><a href="pride-and-prejudice.html" class="menu-item__child-link" data-for="pride-and-prejudice" data-category="pride-and-prejudice">Pride and Prejudice</a></li>
+                <li><a href="corps.html" class="menu-item__child-link" data-for="corps" data-category="ink">Corps</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
+                <span class="menu-item__idx" aria-hidden="true">02</span>
+                <span class="menu-item__label">About</span>
+              </a>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
+                <span class="menu-item__idx" aria-hidden="true">03</span>
+                <span class="menu-item__label">Contact</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+        <div class="menu-overlay__ext">
+          <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+      </nav>
+      <!-- Each project's preview image should use the SAME file in three places once real
+           photography exists: this menu panel, the home page's Featured Work tile, and the
+           case-study page's own hero image. Suggested convention: assets/work/<slug>-cover.jpg
+           (e.g. assets/work/exemplary-home-cover.jpg), referenced identically in all three spots,
+           so there's one file to update rather than three that can silently drift out of sync. -->
+      <div class="menu-overlay__media" aria-hidden="true">
+        <div class="menu-media" data-for="corps">
+          <img src="assets/work/corps/cover.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="work">
+          <img src="assets/menu/the-work.jpg" alt="A pile of pale rubble in a foggy field — from Exemplary Home, rural north-western Bulgaria." loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="exemplary-home">
+          <img src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="pride-and-prejudice">
+          <img src="assets/work/pride-and-prejudice/cover.jpg" alt="Sofia Opera & Ballet × British Embassy — Pride and Prejudice, 2024" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="about">
+          <img src="assets/about/portrait.jpg" alt="Yassen Grigorov" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="contact">
+          <img src="assets/menu/contact.jpg" alt="The inside of a red telephone box — handset, coin slot and a worn BT notice." loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 HERO — data-snap -->
+  <section class="hero" aria-label="YGREQ.STUDIO" data-snap>
+    <div class="hero__media"></div>
+    <canvas class="hero__grain" id="heroGrain" aria-hidden="true"></canvas>
+
+    <!-- Letters roll in Solari/split-flap style — built by hero-wordmark.js.
+         aria-hidden since the section's aria-label already names it. -->
+    <div class="hero__wordmark" aria-hidden="true">
+      <div class="hero__wordmark-row" id="heroWordmark"></div>
+    </div>
+
+    <div class="hero__foot">
+      <span class="label">Visual creative practice — Sofia, Bulgaria</span>
+      <span class="hero__scroll">Scroll</span>
+    </div>
+  </section>
+
+  <!-- 02 INTRO — clay strip + image + marquee -->
+  <section class="section--tight section--clay intro-strip">
+    <div class="wrap">
+      <p class="intro-strip__text">What you say matters as much as what you do. I close that gap for a handful of brands and institutions each year.</p>
+    </div>
+  </section>
+
+  <a href="corps.html" class="intro-strip__link">
+    <img class="intro-strip__image" src="assets/home/intro.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" data-reveal data-reveal-type="image" decoding="async" />
+  </a>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track" id="marqueeTrack">
+      <span class="marquee__item">Photography&thinsp;·&thinsp;Creative Direction&thinsp;·&thinsp;Brand Identity&thinsp;·&thinsp;Content Production&thinsp;·&thinsp;Motion&thinsp;·&thinsp;Editorial&emsp;</span>
+      <span class="marquee__item">Photography&thinsp;·&thinsp;Creative Direction&thinsp;·&thinsp;Brand Identity&thinsp;·&thinsp;Content Production&thinsp;·&thinsp;Motion&thinsp;·&thinsp;Editorial&emsp;</span>
+      <span class="marquee__item">Photography&thinsp;·&thinsp;Creative Direction&thinsp;·&thinsp;Brand Identity&thinsp;·&thinsp;Content Production&thinsp;·&thinsp;Motion&thinsp;·&thinsp;Editorial&emsp;</span>
+    </div>
+  </div>
+
+  <!-- 03 FEATURED WORK -->
+  <section class="section work-section">
+    <div class="wrap work-section__header">
+      <span class="label" data-reveal>Selected work</span>
+      <p class="lead measure-wide" data-reveal>Recent and ongoing work across photography, creative direction, and brand identity.</p>
+    </div>
+
+    <article class="work-item">
+      <a href="exemplary-home.html" class="work-item__link">
+        <div class="work-item__media">
+          <img src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+        </div>
+        <div class="work-item__caption">
+          <span class="label work-item__idx">01</span>
+          <h2 class="work-item__name" data-reveal data-reveal-type="mask">Exemplary Home</h2>
+          <span class="label">Documentary Photography · Exhibition · Editorial</span>
+        </div>
+      </a>
+    </article>
+
+    <article class="work-item">
+      <a href="pride-and-prejudice.html" class="work-item__link">
+        <div class="work-item__media">
+          <img src="assets/work/pride-and-prejudice/cover.jpg" alt="Sofia Opera & Ballet × British Embassy — Pride and Prejudice, 2024" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+        </div>
+        <div class="work-item__caption">
+          <span class="label work-item__idx">02</span>
+          <h2 class="work-item__name" data-reveal data-reveal-type="mask">Sofia Opera &amp; Ballet<br>× British Embassy</h2>
+          <span class="label">Creative Direction · Production · Cultural Partnerships</span>
+        </div>
+      </a>
+    </article>
+
+    <!-- Corps — ongoing documentary with the Sofia Opera and Ballet, third slot. Full page at
+         corps.html; its images, captions and grid are driven from corps-data.js. -->
+    <article class="work-item">
+      <a href="corps.html" class="work-item__link">
+        <div class="work-item__media">
+          <img src="assets/work/corps/cover.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+        </div>
+        <div class="work-item__caption">
+          <span class="label work-item__idx">03</span>
+          <h2 class="work-item__name" data-reveal data-reveal-type="mask">Corps</h2>
+          <span class="label">Documentary Photography · Ongoing</span>
+        </div>
+      </a>
+    </article>
+  </section>
+
+  <!-- 04 APPROACH LEAD — cobalt strip -->
+  <section class="section--tight section--cobalt intro-strip">
+    <div class="wrap">
+      <p class="intro-strip__text">The creative work is the easy part. Getting clear on what needs saying, to whom, and why it should land — that's where the real work sits.</p>
+    </div>
+  </section>
+
+  <!-- 04 EXPANDED APPROACH -->
+  <section class="section approach-section">
+    <div class="wrap approach-grid">
+      <div class="approach-sticky-col">
+        <span class="label">Approach</span>
+      </div>
+      <div class="approach-pillars">
+        <div class="pillar" data-reveal>
+          <span class="label">Creative Direction</span>
+          <p class="lead measure">Visual strategy, art direction, campaign concept. Project-level creative leadership for a specific moment, story, or launch.</p>
+          <p class="measure">Clients who need a single creative mind to carry the project from brief to delivery — not a committee, not a retainer. Usually: cultural institutions, hospitality brands, boutique retail, editorial.</p>
+        </div>
+        <div class="pillar" data-reveal>
+          <span class="label">Photography</span>
+          <p class="lead measure">Editorial and documentary sensibility applied to commercial briefs.</p>
+          <p class="measure">Hospitality, F&amp;B, boutique retail, real estate, lifestyle, cultural institutions. Medium format and digital. International coverage available.</p>
+        </div>
+        <div class="pillar" data-reveal>
+          <span class="label">Identity</span>
+          <p class="lead measure">How a brand looks, sounds, and reads — built and maintained over time.</p>
+          <p class="measure">Strategic visual leadership that replaces the content retainer. Naming, wordmark, colour, type, and the rules for how to use them. Plus the ongoing creative direction that keeps it coherent as the brand grows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 ABOUT TEASER -->
+  <section class="section--tight about-teaser">
+    <div class="wrap about-teaser__inner">
+      <div class="about-teaser__text" data-reveal>
+        <span class="label">About</span>
+        <p class="lead measure" style="margin-top:18px">Seven years in London shaped the eye — studying photography at Westminster, shooting commercially, building a documentary practice exhibited and awarded internationally. The return to Sofia sharpened the argument.</p>
+        <a href="about.html" class="label about-teaser__more">About the practice →</a>
+      </div>
+      <img class="about-teaser__portrait" src="assets/about/portrait.jpg" alt="Yassen Grigorov" data-reveal data-reveal-type="image" loading="lazy" decoding="async" />
+    </div>
+  </section>
+
+  <!-- 06 BIG STATEMENT — cobalt, data-snap, line-by-line reveals -->
+  <section class="section section--cobalt" data-snap>
+    <div class="wrap statement">
+      <p>
+        <span class="reveal-line" data-reveal data-reveal-type="mask">Being good isn't enough anymore.</span>
+        <span class="reveal-line" data-reveal data-reveal-type="mask" style="--reveal-delay:120ms">Being understood is the work.</span>
+        <span class="cont" data-reveal>I help brands and institutions close the gap between what they do and how it reads — through photography, creative direction, and considered visual identity.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- 07 CLIENTS & RECOGNITION -->
+  <section class="section section--ink clients-section">
+    <div class="wrap clients-inner">
+      <span class="label">Clients &amp; recognition</span>
+      <div class="clients-grid">
+        <div class="clients-col">
+          <span class="label clients-col__label">Clients</span>
+          <ul class="clients-list">
+            <li>Sofia Opera &amp; Ballet</li>
+            <li>British Embassy Sofia</li>
+            <li>The Fall Magazine</li>
+            <li>KO-OP</li>
+          </ul>
+        </div>
+        <div class="clients-col">
+          <span class="label clients-col__label">Recognition</span>
+          <ul class="clients-list">
+            <li>International Photography Awards <span>2020</span></li>
+            <li>Bulgarian Photography Awards <span>2021</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 DISCIPLINES -->
+  <section class="section--tight">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:clamp(20px,3vw,34px)">
+        <span class="label" data-reveal>Disciplines</span>
+        <span class="label" data-reveal>Six ways in</span>
+      </div>
+      <div class="disc" data-reveal>
+        <div class="disc__item"><img class="disc__img" src="assets/home/disciplines/photography.jpg" alt="Black-and-white street photograph — men in caps and hoods talking outside a late-night off-licence." loading="lazy" decoding="async" /><span class="disc__num">01</span><span class="disc__name">Photography</span></div>
+        <div class="disc__item"><img class="disc__img" src="assets/home/disciplines/creative-direction.jpg" alt="A photographer working a group of women in Regency dress into position in a panelled drawing room." loading="lazy" decoding="async" /><span class="disc__num">02</span><span class="disc__name">Creative Direction</span></div>
+        <div class="disc__item disc__item--mark"><img class="disc__img disc__img--mark" src="assets/home/disciplines/brand-design-lockup.png" alt="Identity lockup — an engraved line drawing of the Residence above the words The Residence of His Majesty&#39;s Ambassador." loading="lazy" decoding="async" /><span class="disc__num">03</span><span class="disc__name">Brand Identity</span></div>
+        <div class="disc__item"><img class="disc__img" src="assets/home/disciplines/content-production.jpg" alt="A studio in use — a figure on a lit yellow seamless, ringed by softboxes, flags and stands." loading="lazy" decoding="async" /><span class="disc__num">04</span><span class="disc__name">Content Production</span></div>
+        <div class="disc__item"><video class="disc__img disc__img--video" poster="assets/home/disciplines/motion-poster.jpg" muted loop playsinline preload="none" aria-label="Motion — detail footage of a vintage Rolls-Royce: whitewall tyre, radiator mascot, walnut dashboard." data-disc-video><source src="assets/home/disciplines/motion.webm" type="video/webm" /><source src="assets/home/disciplines/motion.mp4" type="video/mp4" /></video><span class="disc__num">05</span><span class="disc__name">Motion</span></div>
+        <div class="disc__item"><img class="disc__img" src="assets/home/disciplines/editorial.jpg" alt="Two men in a green-panelled library — one in a red velvet dinner jacket lighting a cigar, the other in black tie." loading="lazy" decoding="async" /><span class="disc__num">06</span><span class="disc__name">Editorial</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 CTA — clay, data-snap -->
+  <section class="section section--clay" data-snap>
+    <div class="wrap cta">
+      <h2 data-reveal data-reveal-type="mask">Working on something that deserves to be seen properly?</h2>
+      <a class="btn" href="contact.html" data-reveal>Get in touch <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer section--ink">
+    <div class="wrap">
+      <div class="footer__top">
+        <div class="footer__mark">YGREQ.STUDIO</div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="work.html">The Work</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="https://instagram.com/ygreq" rel="me">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </nav>
+      </div>
+      <div class="footer__legal">
+        <span class="label">Sofia, Bulgaria</span>
+        <span class="label">© <span id="year">2026</span> YGREQ.STUDIO</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="hero-wordmark.js"></script>
+  <script src="main.js"></script>
+  <script src="transition.js"></script>
+  <script type="module" src="scroll.js"></script>
+</body>
+</html>

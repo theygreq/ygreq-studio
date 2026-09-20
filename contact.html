@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Contact — YGREQ.STUDIO</title>
+  <meta name="description" content="Get in touch with YGREQ.STUDIO — a visual creative practice based in Sofia. Photography, creative direction, and brand identity for a handful of brands and institutions each year." />
+
+  <meta property="og:title" content="Contact — YGREQ.STUDIO" />
+  <meta property="og:description" content="A visual creative practice based in Sofia. Closing the gap between what a brand is and how it reads." />
+  <meta property="og:type" content="website" />
+
+  <!-- browser-chrome tint (Safari toolbar, iOS/Android address bar): this page's
+       field colour, matching the page-transition curtain that arrives on it.
+       Mirrors the tokens in styles.css :root — keep the two in step. -->
+  <meta name="theme-color" content="#1A4F92" /> <!-- cobalt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- page transition: paint the incoming curtain before the first paint, so the
+       page never flashes underneath it. See transition.js / .page-curtain. -->
+  <script>
+    (function () {
+      try {
+        var pt = sessionStorage.getItem('pt');
+        if (!pt) return;
+        sessionStorage.removeItem('pt');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.dataset.ptEnter = pt;
+      } catch (e) {}
+    }());
+  </script>
+</head>
+<body>
+
+  <!-- Page transition curtain — inert until transition.js drives it -->
+  <div class="page-curtain" aria-hidden="true"></div>
+
+  <!-- Section counter — updated by scroll.js -->
+  <div class="section-counter" id="sectionCounter" aria-hidden="true">
+    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">02</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="nav__mark" href="index.html">YGREQ.STUDIO</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="work.html">The Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- FULL-SCREEN MENU OVERLAY -->
+  <div id="menu-overlay" class="menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-overlay__curtain" aria-hidden="true"></div>
+    <div class="menu-overlay__inner">
+      <nav class="menu-overlay__nav" aria-label="Primary navigation">
+        <ul class="menu-overlay__list">
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
+                <span class="menu-item__idx" aria-hidden="true">01</span>
+                <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
+              </a>
+              <ul class="menu-item__children" aria-label="The Work — projects">
+                <li><a href="exemplary-home.html" class="menu-item__child-link" data-for="exemplary-home" data-category="exemplary-home">Exemplary Home</a></li>
+                <li><a href="pride-and-prejudice.html" class="menu-item__child-link" data-for="pride-and-prejudice" data-category="pride-and-prejudice">Pride and Prejudice</a></li>
+                <li><a href="corps.html" class="menu-item__child-link" data-for="corps" data-category="ink">Corps</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
+                <span class="menu-item__idx" aria-hidden="true">02</span>
+                <span class="menu-item__label">About</span>
+              </a>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
+                <span class="menu-item__idx" aria-hidden="true">03</span>
+                <span class="menu-item__label">Contact</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+        <div class="menu-overlay__ext">
+          <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+      </nav>
+      <!-- Each project's preview image should use the SAME file in three places once real
+           photography exists: this menu panel, the home page's Featured Work tile, and the
+           case-study page's own hero image. Suggested convention: assets/work/<slug>-cover.jpg
+           (e.g. assets/work/exemplary-home-cover.jpg), referenced identically in all three spots,
+           so there's one file to update rather than three that can silently drift out of sync. -->
+      <div class="menu-overlay__media" aria-hidden="true">
+        <div class="menu-media" data-for="corps">
+          <img src="assets/work/corps/cover.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="work">
+          <img src="assets/menu/the-work.jpg" alt="A pile of pale rubble in a foggy field — from Exemplary Home, rural north-western Bulgaria." loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="exemplary-home">
+          <img src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="pride-and-prejudice">
+          <img src="assets/work/pride-and-prejudice/cover.jpg" alt="Sofia Opera & Ballet × British Embassy — Pride and Prejudice, 2024" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="about">
+          <img src="assets/about/portrait.jpg" alt="Yassen Grigorov" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="contact">
+          <img src="assets/menu/contact.jpg" alt="The inside of a red telephone box — handset, coin slot and a worn BT notice." loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 EDITORIAL — statement, email as the headline, quiet social links.
+       First section clears the fixed nav. -->
+  <section class="section--tight section--first">
+    <div class="wrap contact-intro">
+      <span class="label" data-reveal>Engagement</span>
+      <p class="lead measure-wide" data-reveal data-reveal-type="mask" style="margin-top:18px">A handful of brands and institutions each year. Commissions, collaborations, and retained partnerships — across photography, creative direction, and identity. Pricing isn't published; it's a conversation. The only real criterion is whether I'd already be a customer of the brand in question.</p>
+
+      <!-- PLACEHOLDER — confirm the real address with Yassen before launch -->
+      <a href="mailto:hello@ygreq.studio" class="contact-email" data-reveal data-reveal-type="mask">hello@ygreq.studio</a>
+
+      <div class="contact-social" data-reveal>
+        <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram — @ygreq</a>
+        <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 START A CONVERSATION — cobalt field, the one colour beat -->
+  <section class="section section--cobalt">
+    <div class="wrap contact-form-wrap">
+      <p class="contact-form-lead" data-reveal data-reveal-type="mask">Start a conversation.</p>
+
+      <!-- Backend: Web3Forms (web3forms.com) — free, no paid tier at this volume, no server to
+           host. Paste your own access key below before launch (Web3Forms issues one per email
+           address, free). To use Netlify Forms instead if this ever moves to Netlify hosting:
+           add data-netlify="true" name="contact" to this <form>, remove the three Web3Forms
+           hidden inputs below, and keep the honeypot (Netlify reads the same name="botcheck"). -->
+      <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST" data-reveal>
+        <input type="hidden" name="access_key" value="87fc8423-d883-41c8-bfe2-def44e3d672f" />
+        <input type="hidden" name="subject" value="New enquiry — ygreq.studio" />
+        <!-- No-JS fallback target: Web3Forms redirects a plain (non-fetch) POST here after
+             sending, so submission still works with JavaScript disabled. main.js also checks
+             for ?sent=1 on load, to show the same success state for anyone who has JS by the
+             time they land back here. -->
+        <input type="hidden" name="redirect" value="contact.html?sent=1" />
+
+        <div class="visually-hidden" aria-hidden="true">
+          <label for="botcheck">Leave this field empty</label>
+          <input type="checkbox" name="botcheck" id="botcheck" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="contact-form__fields">
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required autocomplete="name" aria-describedby="name-error" />
+            <span class="field__error" id="name-error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" aria-describedby="email-error" />
+            <span class="field__error" id="email-error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="organisation">Organisation <span class="field__optional">(optional)</span></label>
+            <input type="text" id="organisation" name="organisation" autocomplete="organization" />
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" required aria-describedby="message-error"></textarea>
+            <span class="field__error" id="message-error" aria-live="polite"></span>
+          </div>
+
+          <button type="submit" class="btn contact-form__submit">Send <span class="arr">→</span></button>
+        </div>
+
+        <p class="contact-form__status" role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer section--ink">
+    <div class="wrap">
+      <div class="footer__top">
+        <div class="footer__mark">YGREQ.STUDIO</div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="work.html">The Work</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="https://instagram.com/ygreq" rel="me">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </nav>
+      </div>
+      <div class="footer__legal">
+        <span class="label">Sofia, Bulgaria</span>
+        <span class="label">© <span id="year">2026</span> YGREQ.STUDIO</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="transition.js"></script>
+  <script type="module" src="scroll.js"></script>
+</body>
+</html>

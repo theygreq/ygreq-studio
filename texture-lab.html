@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>YGREQ.STUDIO — Texture lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+<style>
+@font-face{
+  font-family:'Gambarino';
+  src:url('assets/fonts/Gambarino-Regular.woff2') format('woff2');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+:root{
+  --paper:#E5DFD2; --ink:#23241D; --cream:#ECE7DB;
+  --clay:#AE674C; --clay-strong:#9A5942; --olive:#565C49;
+  --cobalt:#1A4F92; --stone:#847E72; --black:#1A1B15;
+  --line:rgba(35,36,29,.14);
+  --fs-label:.72rem; --ls-label:.14em;
+  --gut:clamp(20px,5vw,80px);
+  --font-display:'Gambarino',serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;}
+body{font-family:"Inter",system-ui,sans-serif; color:var(--ink); background:var(--black); -webkit-font-smoothing:antialiased;}
+@media (pointer:fine){ body{cursor:none;} }
+.label{font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase; font-weight:500;}
+
+.deck{height:100svh; overflow-y:scroll; scroll-snap-type:y mandatory;}
+.deck::-webkit-scrollbar{width:0;}
+.dir{position:relative; height:100svh; scroll-snap-align:start; overflow:hidden;}
+
+.brand-tag{position:fixed; top:clamp(18px,2.4vw,30px); left:var(--gut); z-index:80; font-family:"DM Sans",sans-serif; font-weight:600; letter-spacing:-.01em; font-size:.95rem; mix-blend-mode:difference; color:#fff;}
+.index{position:fixed; top:clamp(18px,2.4vw,30px); right:var(--gut); z-index:80; display:flex; gap:14px; mix-blend-mode:difference; color:#fff;}
+.index a{font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase; color:#fff; text-decoration:none; opacity:.45; transition:opacity .3s;}
+.index a:hover,.index a.is-active{opacity:1;}
+
+/* ---------------- HERO (refined grain) ---------------- */
+.hero{position:absolute; inset:0; background:var(--black); overflow:hidden;}
+.hero__tex{
+  position:absolute; inset:0; will-change:transform;
+  background:
+    radial-gradient(120% 140% at 22% 12%, #C2724F 0%, #6E4332 34%, #1c1512 70%, #0a0807 100%),
+    linear-gradient(118deg, #7a5240, #14100d 46%, #5d6149 72%, #14100d);
+  background-size:220% 220%, 260% 260%;
+  filter:grayscale(.32) contrast(1.08) brightness(1.02);
+  animation:drift 26s ease-in-out infinite alternate;
+}
+@keyframes drift{0%{background-position:0% 0%,100% 0%;} 100%{background-position:100% 100%,0% 100%;}}
+.hero__mask{position:absolute; inset:0; width:100%; height:100%;}
+.hero__grain{position:absolute; inset:0; width:100%; height:100%; mix-blend-mode:overlay; opacity:.62; pointer-events:none;}
+.hero__glint{position:absolute; inset:0; width:100%; height:100%; mix-blend-mode:screen; pointer-events:none;}
+.hero__foot{position:absolute; left:var(--gut); right:var(--gut); bottom:clamp(22px,4vw,44px); display:flex; justify-content:space-between; align-items:flex-end; gap:20px; mix-blend-mode:difference; color:#fff;}
+.hero__foot .label{color:rgba(255,255,255,.8);}
+
+.note{position:absolute; left:var(--gut); top:clamp(78px,12vh,120px); z-index:5; max-width:min(440px,72vw);}
+.note__badge{display:inline-flex; align-items:center; gap:8px; font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase; color:#fff; mix-blend-mode:difference; margin-bottom:14px;}
+.note__badge b{font-family:"DM Sans",sans-serif; font-weight:600; letter-spacing:.04em; border:1px solid rgba(255,255,255,.5); border-radius:999px; padding:3px 10px;}
+.note__title{font-family:var(--font-display); font-weight:400; line-height:1; letter-spacing:-.02em; font-size:clamp(1.6rem,3vw,2.6rem); color:#fff; mix-blend-mode:difference; margin:0 0 10px;}
+.note__body{font-size:.92rem; line-height:1.55; color:rgba(255,255,255,.82); mix-blend-mode:difference; max-width:40ch;}
+
+.dir--paper .note__badge,.dir--paper .note__title,.dir--paper .note__body{mix-blend-mode:normal; color:var(--ink);}
+.dir--paper .note__badge{color:var(--ink);}
+.dir--paper .note__badge b{border-color:rgba(35,36,29,.4);}
+.dir--paper .note__body{color:var(--stone);}
+
+/* ---------------- PAPER SECTIONS ---------------- */
+.paper{position:absolute; inset:0; background:var(--paper);}
+.paper__tex{position:absolute; inset:0; background-repeat:repeat;}
+.paper__sheen{position:absolute; inset:-20%; mix-blend-mode:soft-light; opacity:.5; pointer-events:none;
+  background:radial-gradient(38% 30% at 30% 20%, rgba(255,255,255,.55), transparent 60%);
+  animation:sheen 22s ease-in-out infinite alternate;
+}
+@keyframes sheen{
+  0%{ background-position:0% 0%; transform:translate(0,0); }
+  100%{ background-position:100% 100%; transform:translate(6%,8%); }
+}
+.swatch-content{position:absolute; right:var(--gut); bottom:clamp(22px,4vw,44px); text-align:right;}
+.swatch-content .lead{font-family:var(--font-display); font-size:clamp(1.6rem,3vw,2.6rem); line-height:1.05; letter-spacing:-.02em; max-width:16ch; margin-left:auto;}
+
+/* loupe / detail inset */
+.loupe{
+  position:absolute; right:var(--gut); top:clamp(78px,12vh,120px); z-index:5;
+  width:clamp(150px,18vw,210px); height:clamp(150px,18vw,210px);
+  border-radius:50%; overflow:hidden; border:1px solid rgba(35,36,29,.35);
+  box-shadow:0 14px 34px rgba(0,0,0,.16);
+}
+.loupe__inner{width:100%; height:100%; image-rendering:pixelated; background-repeat:no-repeat;}
+.loupe-label{
+  position:absolute; right:var(--gut); top:calc(clamp(78px,12vh,120px) + clamp(150px,18vw,210px) + 12px);
+  font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase; color:var(--stone);
+}
+
+@media (max-width:760px){
+  .note{max-width:80vw;}
+  .loupe,.loupe-label{display:none;}
+  .swatch-content{left:var(--gut); right:var(--gut); text-align:left;}
+  .swatch-content .lead{margin-left:0;}
+}
+
+/* cursor */
+.cursor{position:fixed; top:0; left:0; z-index:120; width:30px; height:30px; margin:-15px 0 0 -15px; border:1px solid #fff; border-radius:50%; mix-blend-mode:difference; pointer-events:none; transition:opacity .3s; opacity:0;}
+.cursor.is-on{opacity:1;}
+@media (pointer:coarse){ .cursor{display:none;} }
+</style>
+</head>
+<body>
+
+<div class="brand-tag">YGREQ.STUDIO</div>
+<nav class="index" aria-label="Sections">
+  <a href="#hero" data-i="hero">Hero</a>
+  <a href="#a" data-i="a">2a</a>
+  <a href="#b" data-i="b">2b</a>
+  <a href="#c" data-i="c">2c</a>
+</nav>
+<div class="cursor" id="cursor"></div>
+
+<main class="deck" id="deck">
+
+  <!-- HERO — refined cinematic grain -->
+  <section class="dir" id="hero" data-dir="hero">
+    <div class="hero">
+      <div class="hero__tex"></div>
+      <svg class="hero__mask" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <mask id="m-h"><rect width="1600" height="900" fill="#fff"/>
+            <text x="800" y="470" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="190" letter-spacing="-4" fill="#000">YGREQ.STUDIO</text>
+          </mask>
+          <mask id="m-h-inv"><rect width="1600" height="900" fill="#000"/>
+            <text x="800" y="470" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="190" letter-spacing="-4" fill="#fff">YGREQ.STUDIO</text>
+          </mask>
+          <linearGradient id="bg-grad" x1="0" y1="0" x2="0.85" y2="1">
+            <stop offset="0%" stop-color="#322D26"/>
+            <stop offset="55%" stop-color="#211E18"/>
+            <stop offset="100%" stop-color="#15130F"/>
+          </linearGradient>
+          <linearGradient id="glint-grad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1600" y2="0">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="46%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#FFF7E8" stop-opacity=".95"/>
+            <stop offset="54%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <rect width="1600" height="900" fill="url(#bg-grad)" mask="url(#m-h)"/>
+        <rect id="glint-rect" width="1600" height="900" fill="url(#glint-grad)" mask="url(#m-h-inv)" transform="rotate(112 800 450)"/>
+      </svg>
+      <canvas class="hero__grain" id="grain-hero"></canvas>
+      <div class="note">
+        <span class="note__badge"><b>1a</b> Refined</span>
+        <h2 class="note__title">Lighter, with a glint</h2>
+        <p class="note__body">Background is now a soft charcoal gradient instead of flat black. Grain is stronger and more present — tonal noise blended with <code>overlay</code> so it reads as film, not static. And a chrome-like glint sweeps across the wordmark itself, drifting slowly at rest and accelerating as you scroll — the first signal that something special is in store.</p>
+      </div>
+      <div class="hero__foot">
+        <span class="label">Visual creative practice — Sofia, Bulgaria</span>
+        <span class="label">Scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2a — Hahnemühle fibre -->
+  <section class="dir dir--paper" id="a" data-dir="a">
+    <div class="paper">
+      <div class="paper__tex" id="tex-a"></div>
+      <div class="note">
+        <span class="note__badge"><b>2a</b> Fibre</span>
+        <h2 class="note__title">Hahnemühle</h2>
+        <p class="note__body">Soft fibre mottling plus a fine matte tooth, the way the paper itself looks before anything is printed on it. Entirely static — nothing moves, nothing refreshes. Warmest and quietest of the three.</p>
+      </div>
+      <div class="loupe"><div class="loupe__inner" id="loupe-a"></div></div>
+      <div class="loupe-label">Detail, 8×</div>
+      <div class="swatch-content"><p class="lead">Being good isn't enough anymore.</p></div>
+    </div>
+  </section>
+
+  <!-- 2b — Snowball -->
+  <section class="dir dir--paper" id="b" data-dir="b">
+    <div class="paper">
+      <div class="paper__tex" id="tex-b"></div>
+      <div class="paper__sheen"></div>
+      <div class="note">
+        <span class="note__badge"><b>2b</b> Snowball</span>
+        <h2 class="note__title">Grand Seiko dial</h2>
+        <p class="note__body">Fine granular flecks at varied brightness, the way a snowflake dial scatters light unevenly, plus a very slow raking highlight that drifts across the field over twenty-odd seconds. No fibre underneath — just texture and light. Most luxurious, but consider it can compete with photography if overused.</p>
+      </div>
+      <div class="loupe"><div class="loupe__inner" id="loupe-b"></div></div>
+      <div class="loupe-label">Detail, 8×</div>
+      <div class="swatch-content"><p class="lead">Being good isn't enough anymore.</p></div>
+    </div>
+  </section>
+
+  <!-- 2c — Combined -->
+  <section class="dir dir--paper" id="c" data-dir="c">
+    <div class="paper">
+      <div class="paper__tex" id="tex-c"></div>
+      <div class="paper__sheen" style="opacity:.32"></div>
+      <div class="note">
+        <span class="note__badge"><b>2c</b> Combined</span>
+        <h2 class="note__title">Fibre, with light</h2>
+        <p class="note__body">Hahnemühle's fibre base carrying the snowball's slow raking light at lower intensity. Reads as paper at rest, and catches the eye faintly as you scroll past it. My pick of the three for the bulk of the site, with 2b reserved for something smaller and more deliberate — a single card or section, not the whole page.</p>
+      </div>
+      <div class="loupe"><div class="loupe__inner" id="loupe-c"></div></div>
+      <div class="loupe-label">Detail, 8×</div>
+      <div class="swatch-content"><p class="lead">Being good isn't enough anymore.</p></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- chrome glint sweep, ambient + scroll-reactive ---------- */
+(function(){
+  const rect = document.getElementById('glint-rect');
+  if (!rect) return;
+  let pos = -300;      // sweep position along the 1600-wide rect
+  let vel = 0.55;       // ambient drift speed
+  let boost = 0;
+  const deck = document.getElementById('deck');
+  let lastScroll = deck.scrollTop;
+
+  deck.addEventListener('scroll', ()=>{
+    const dy = deck.scrollTop - lastScroll;
+    lastScroll = deck.scrollTop;
+    boost += dy * 0.9;
+  }, { passive:true });
+
+  function frame(){
+    pos += vel + boost;
+    boost *= 0.9;
+    if (pos > 2400) pos = -300;
+    if (pos < -300) pos = 2400;
+    rect.setAttribute('transform', `rotate(112 800 450) translate(${pos} 0)`);
+    requestAnimationFrame(frame);
+  }
+  if (!reduce) frame();
+})();
+
+/* ---------- cursor ---------- */
+(function(){
+  if (matchMedia('(pointer:coarse)').matches) return;
+  const c=document.getElementById('cursor');
+  let x=innerWidth/2,y=innerHeight/2,tx=x,ty=y;
+  addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;c.classList.add('is-on');});
+  (function loop(){x+=(tx-x)*.18;y+=(ty-y)*.18;c.style.transform=`translate(${x}px,${y}px)`;requestAnimationFrame(loop);})();
+})();
+
+/* ---------- refined cinematic film grain (hero) ---------- */
+(function(){
+  const cv = document.getElementById('grain-hero');
+  const ctx = cv.getContext('2d');
+  const TILE = 84; // fine but visible grain
+  const tileCanvas = document.createElement('canvas');
+  tileCanvas.width = tileCanvas.height = TILE;
+  const tctx = tileCanvas.getContext('2d');
+
+  function regenTile(){
+    const img = tctx.createImageData(TILE,TILE);
+    const d = img.data;
+    for(let i=0;i<d.length;i+=4){
+      const n = (Math.random()+Math.random()+Math.random())/3;
+      const v = Math.round(128 + (n-0.5)*2*58); // amplitude ~58, clearly present
+      d[i]=d[i+1]=d[i+2]=v; d[i+3]=255;
+    }
+    tctx.putImageData(img,0,0);
+  }
+
+  function size(){
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(devicePixelRatio||1, 2);
+    cv.width = Math.max(2, r.width*dpr|0);
+    cv.height = Math.max(2, r.height*dpr|0);
+  }
+  size(); addEventListener('resize', size);
+
+  let visible = true;
+  const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.target===cv.closest('.dir')) visible = e.isIntersecting; }), {threshold:0.2});
+  io.observe(cv.closest('.dir'));
+
+  if (reduce){
+    regenTile();
+    ctx.fillStyle = ctx.createPattern(tileCanvas,'repeat');
+    ctx.fillRect(0,0,cv.width,cv.height);
+    return;
+  }
+
+  let last = 0;
+  (function tick(t){
+    if (visible && t - last > 130){
+      regenTile(); last = t;
+      ctx.clearRect(0,0,cv.width,cv.height);
+      ctx.fillStyle = ctx.createPattern(tileCanvas,'repeat');
+      ctx.fillRect(0,0,cv.width,cv.height);
+    }
+    requestAnimationFrame(tick);
+  })(0);
+})();
+
+/* ---------- static paper textures, anchored to off-white base ---------- */
+function makePaperTexture({ size=240, fibre=true, fleck=true, fibreCount=90, fibreAlpha=0.16, fleckDensity=0.05, fleckAlpha=0.22 }){
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  const BASE = '#E5DFD2'; // off-white paper, never washed toward pure white
+  ctx.fillStyle = BASE;
+  ctx.fillRect(0,0,size,size);
+
+  if (fibre){
+    // visible soft fibrous mottling — balanced light/dark blobs so the average stays anchored to BASE
+    const fc = document.createElement('canvas'); fc.width = fc.height = size;
+    const fctx = fc.getContext('2d');
+    for (let i=0;i<fibreCount;i++){
+      const x = Math.random()*size, y = Math.random()*size;
+      const len = 10 + Math.random()*26;
+      const w = 2 + Math.random()*4;
+      const ang = Math.random()*Math.PI;
+      const dark = i % 2 === 0;
+      fctx.strokeStyle = dark ? 'rgba(120,108,84,0.5)' : 'rgba(255,253,244,0.55)';
+      fctx.lineWidth = w;
+      fctx.lineCap = 'round';
+      fctx.beginPath();
+      fctx.moveTo(x, y);
+      fctx.lineTo(x+Math.cos(ang)*len, y+Math.sin(ang)*len);
+      fctx.stroke();
+    }
+    ctx.filter = 'blur(2.4px)';
+    ctx.globalAlpha = fibreAlpha;
+    ctx.drawImage(fc,0,0);
+    ctx.filter = 'none';
+    ctx.globalAlpha = 1;
+  }
+
+  if (fleck){
+    const n = Math.round(size*size*fleckDensity*0.012);
+    for (let i=0;i<n;i++){
+      const x = Math.random()*size, y = Math.random()*size;
+      const light = Math.random() > 0.42; // slight bias light, balanced by dark companions to hold the base tone
+      const r = Math.random()*1.3 + 0.4;
+      ctx.fillStyle = light
+        ? `rgba(255,253,242,${(0.4+Math.random()*0.5)*fleckAlpha})`
+        : `rgba(110,98,76,${(0.35+Math.random()*0.45)*fleckAlpha})`;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+    }
+  }
+  return c;
+}
+
+const TEX_SIZE = 240;
+const texA = makePaperTexture({ size:TEX_SIZE, fibre:true,  fleck:false, fibreCount:110, fibreAlpha:0.2 }); // Hahnemühle — fibre only
+const texB = makePaperTexture({ size:TEX_SIZE, fibre:false, fleck:true,  fleckDensity:0.16, fleckAlpha:0.34 }); // Snowball — flecks + sheen only
+const texC = makePaperTexture({ size:TEX_SIZE, fibre:true,  fleck:true,  fibreCount:70, fibreAlpha:0.14, fleckDensity:0.07, fleckAlpha:0.24 }); // Combined
+
+function apply(id, tex){
+  const url = tex.toDataURL();
+  document.getElementById(id).style.backgroundImage = `url(${url})`;
+  document.getElementById(id).style.backgroundSize = TEX_SIZE+'px '+TEX_SIZE+'px';
+  return url;
+}
+const urlA = apply('tex-a', texA);
+const urlB = apply('tex-b', texB);
+const urlC = apply('tex-c', texC);
+
+function loupe(id, url){
+  const el = document.getElementById(id);
+  el.style.backgroundImage = `url(${url})`;
+  el.style.backgroundSize = (TEX_SIZE*3.4)+'px '+(TEX_SIZE*3.4)+'px';
+}
+loupe('loupe-a', urlA);
+loupe('loupe-b', urlB);
+loupe('loupe-c', urlC);
+
+if (reduce) document.querySelectorAll('.paper__sheen').forEach(s=>s.style.animation='none');
+
+/* active index */
+const links=[...document.querySelectorAll('.index a')];
+const io2=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting && e.intersectionRatio>0.5) links.forEach(a=>a.classList.toggle('is-active', a.dataset.i===e.target.dataset.dir));
+}),{threshold:[0.5]});
+document.querySelectorAll('.dir').forEach(d=>io2.observe(d));
+</script>
+</body>
+</html>

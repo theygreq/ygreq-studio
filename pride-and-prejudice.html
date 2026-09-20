@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Sofia Opera &amp; Ballet × British Embassy — YGREQ.STUDIO</title>
+  <meta name="description" content="Sofia Opera and Ballet × British Embassy Sofia — Pride and Prejudice, World Premiere. Creative direction, production, and cultural partnerships." />
+
+  <meta property="og:title" content="Sofia Opera &amp; Ballet × British Embassy — YGREQ.STUDIO" />
+  <meta property="og:description" content="Sofia Opera and Ballet × British Embassy Sofia — Pride and Prejudice, World Premiere." />
+  <meta property="og:type" content="website" />
+
+  <!-- browser-chrome tint (Safari toolbar, iOS/Android address bar): this page's
+       field colour, matching the page-transition curtain that arrives on it.
+       Mirrors the tokens in styles.css :root — keep the two in step. -->
+  <meta name="theme-color" content="#1A2541" /> <!-- the ballet poster's navy -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- page transition: paint the incoming curtain before the first paint, so the
+       page never flashes underneath it. See transition.js / .page-curtain. -->
+  <script>
+    (function () {
+      try {
+        var pt = sessionStorage.getItem('pt');
+        if (!pt) return;
+        sessionStorage.removeItem('pt');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.dataset.ptEnter = pt;
+      } catch (e) {}
+    }());
+  </script>
+</head>
+<body class="project project--pride-and-prejudice">
+
+  <!-- Page transition curtain — inert until transition.js drives it -->
+  <div class="page-curtain" aria-hidden="true"></div>
+
+  <!-- Section counter — updated by scroll.js -->
+  <div class="section-counter" id="sectionCounter" aria-hidden="true">
+    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">08</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="nav__mark" href="index.html">YGREQ.STUDIO</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="work.html">The Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- FULL-SCREEN MENU OVERLAY -->
+  <div id="menu-overlay" class="menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-overlay__curtain" aria-hidden="true"></div>
+    <div class="menu-overlay__inner">
+      <nav class="menu-overlay__nav" aria-label="Primary navigation">
+        <ul class="menu-overlay__list">
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
+                <span class="menu-item__idx" aria-hidden="true">01</span>
+                <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
+              </a>
+              <ul class="menu-item__children" aria-label="The Work — projects">
+                <li><a href="exemplary-home.html" class="menu-item__child-link" data-for="exemplary-home" data-category="exemplary-home">Exemplary Home</a></li>
+                <li><a href="pride-and-prejudice.html" class="menu-item__child-link" data-for="pride-and-prejudice" data-category="pride-and-prejudice">Pride and Prejudice</a></li>
+                <li><a href="corps.html" class="menu-item__child-link" data-for="corps" data-category="ink">Corps</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
+                <span class="menu-item__idx" aria-hidden="true">02</span>
+                <span class="menu-item__label">About</span>
+              </a>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
+                <span class="menu-item__idx" aria-hidden="true">03</span>
+                <span class="menu-item__label">Contact</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+        <div class="menu-overlay__ext">
+          <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+      </nav>
+      <!-- Each project's preview image should use the SAME file in three places once real
+           photography exists: this menu panel, the home page's Featured Work tile, and the
+           case-study page's own hero image. Suggested convention: assets/work/<slug>-cover.jpg
+           (e.g. assets/work/exemplary-home-cover.jpg), referenced identically in all three spots,
+           so there's one file to update rather than three that can silently drift out of sync. -->
+      <div class="menu-overlay__media" aria-hidden="true">
+        <div class="menu-media" data-for="corps">
+          <img src="assets/work/corps/cover.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="work">
+          <img src="assets/menu/the-work.jpg" alt="A pile of pale rubble in a foggy field — from Exemplary Home, rural north-western Bulgaria." loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="exemplary-home">
+          <img src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="pride-and-prejudice">
+          <img src="assets/work/pride-and-prejudice/cover.jpg" alt="Sofia Opera & Ballet × British Embassy — Pride and Prejudice, 2024" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="about">
+          <img src="assets/about/portrait.jpg" alt="Yassen Grigorov" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="contact">
+          <img src="assets/menu/contact.jpg" alt="The inside of a red telephone box — handset, coin slot and a worn BT notice." loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 CASE HERO — first section clears fixed nav -->
+  <section class="section--tight section--first">
+    <div class="wrap">
+      <h1 class="case-hero__title" data-reveal data-reveal-type="mask">Sofia Opera &amp; Ballet × British Embassy</h1>
+      <span class="label case-hero__tags" data-reveal>Creative Direction · Production · Cultural Partnerships</span>
+    </div>
+  </section>
+
+  <!-- 02 PROJECT -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Project</span>
+      <p class="case-prose measure-wide" data-reveal>Sofia Opera and Ballet × British Embassy Sofia — Pride and Prejudice, World Premiere.</p>
+    </div>
+    <div class="wrap case-media">
+      <img class="zoomable" src="assets/work/pride-and-prejudice/cover.jpg" alt="Pride and Prejudice — official poster image, the residence" data-reveal data-reveal-type="image" data-parallax decoding="async" />
+    </div>
+  </section>
+
+  <!-- 03 ORIGIN -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Origin</span>
+      <p class="case-prose measure-wide" data-reveal>An opportunity came in through the British Council: the Sofia Opera and Ballet was staging the world premiere of a ballet adaptation of Pride and Prejudice, choreographed by Leo Mujić. There was scope for a collaboration with the Embassy. What started as a routine cultural diplomacy brief became something more ambitious once I took ownership of it — proposing a collaborative marketing approach that would treat the premiere as a shared cultural moment, not a sponsorship logo on a poster.</p>
+    </div>
+  </section>
+
+  <!-- 04 METHOD — sticky case-meta rail alongside case-blocks -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Method</span>
+    </div>
+    <div class="wrap case-layout" style="margin-top:clamp(24px,3vw,36px)">
+      <div class="case-meta" data-reveal>
+        <div class="case-meta__item">
+          <span class="label">Client</span>
+          <span class="case-meta__value">Sofia Opera and Ballet × British Embassy Sofia</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Role</span>
+          <span class="case-meta__value">Creative Direction · Production</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Year</span>
+          <span class="case-meta__value">2024</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Discipline</span>
+          <span class="case-meta__value">Creative Direction · Production · Cultural Partnerships</span>
+        </div>
+      </div>
+      <div class="case-blocks">
+        <div class="case-block" data-reveal>
+          <span class="case-block__title">The first conversation</span>
+          <p class="measure-wide">The first meeting set the tone: a working conversation with Marta Petkova, Leo Mujić, and Lyudmila Ilieva about what a real collaboration could look like.</p>
+        </div>
+        <div class="case-block" data-reveal>
+          <span class="case-block__title">Opening the access</span>
+          <p class="measure-wide">From there, I produced and led the Embassy's involvement end-to-end. I proposed the idea of shooting the official poster image in the residence, and the access to the Opera's last raw rehearsal in the studio — a moment the institution had never previously opened up to a foreign mission.</p>
+        </div>
+        <div class="case-block" data-reveal>
+          <span class="case-block__title">The production</span>
+          <p class="measure-wide">I assisted the production photography at the residence, working alongside the Opera's photographer, Leo Mujić, and Balint Rauscher.</p>
+        </div>
+        <div class="case-block" data-reveal>
+          <span class="case-block__title">The strategy</span>
+          <p class="measure-wide">The strategy was simple: treat the Opera as a partner with its own creative authority, not a stage to be borrowed.</p>
+        </div>
+      </div>
+    </div>
+    <div class="wrap case-media">
+      <div class="case-media--pair">
+        <img class="zoomable" src="assets/work/pride-and-prejudice/02-residence.jpg" alt="Pride and Prejudice — production photography at the residence" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+        <img class="zoomable" src="assets/work/pride-and-prejudice/03-rehearsal.jpg" alt="Sofia Opera and Ballet — the raw rehearsal, studio" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 OUTCOME -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Outcome</span>
+      <ul class="case-list" data-reveal>
+        <li>Official poster imagery for the world premiere of Pride and Prejudice</li>
+        <li>Embassy-led visit to the raw rehearsal, attended by the Ambassador — the first time the Opera had hosted a head of mission at that stage of production</li>
+        <li>A British Council student visit to one of the first stage rehearsals</li>
+        <li>Premiere attendance with the Ambassador and his wife, including a commissioned bouquet developed with a local florist to reference the horticultural fashions of the period</li>
+        <li>Soft social content captured around the rehearsal visit performed exceptionally well across both the Embassy's and the Opera's channels</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 06 RECOGNITION -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Recognition</span>
+      <p class="case-prose measure-wide" data-reveal>The Sofia Opera and Ballet expressed that this marked the first time a foreign mission of this seniority had engaged so closely with the institution's working process — a recognition that has opened the door to ongoing collaboration with their leadership.</p>
+    </div>
+  </section>
+
+  <!-- 07 REFLECTION -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Reflection</span>
+      <p class="case-prose measure-wide" data-reveal>Pride and Prejudice was the project that crystallised what YGREQ.STUDIO does. It wasn't about producing a single beautiful image — it was about reading what an institution needed, proposing a way of working that respected its authority while bringing something new, and managing the production from idea to delivery. The Embassy got a campaign with real cultural weight. The Opera got attention from an audience it doesn't usually reach. Both got something neither could have produced alone. That's the work.</p>
+    </div>
+  </section>
+
+  <!-- 08 NEXT — takes the destination's field: Corps runs on the dark field -->
+  <section class="section section--ink case-next">
+    <div class="wrap case-next__body">
+      <span class="label" data-reveal>Next</span>
+      <a class="case-next__link" href="corps.html" data-reveal data-reveal-type="mask">Corps <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer section--ink">
+    <div class="wrap">
+      <div class="footer__top">
+        <div class="footer__mark">YGREQ.STUDIO</div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="work.html">The Work</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="https://instagram.com/ygreq" rel="me">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </nav>
+      </div>
+      <div class="footer__legal">
+        <span class="label">Sofia, Bulgaria</span>
+        <span class="label">© <span id="year">2026</span> YGREQ.STUDIO</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="transition.js"></script>
+  <script type="module" src="scroll.js"></script>
+</body>
+</html>

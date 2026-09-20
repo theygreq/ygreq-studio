@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Exemplary Home — YGREQ.STUDIO</title>
+  <meta name="description" content="Exemplary Home — a documentary photography project exploring rural north-western Bulgaria. Medium format film, 2019–2020. International Photography Awards, Bulgarian Photography Awards, KO-OP Sofia." />
+
+  <meta property="og:title" content="Exemplary Home — YGREQ.STUDIO" />
+  <meta property="og:description" content="A documentary project exploring rural north-western Bulgaria, shot on medium format film over winter and spring 2019–2020." />
+  <meta property="og:type" content="website" />
+
+  <!-- browser-chrome tint (Safari toolbar, iOS/Android address bar): this page's
+       field colour, matching the page-transition curtain that arrives on it.
+       Mirrors the tokens in styles.css :root — keep the two in step. -->
+  <meta name="theme-color" content="#DE4832" /> <!-- the project's own red -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- page transition: paint the incoming curtain before the first paint, so the
+       page never flashes underneath it. See transition.js / .page-curtain. -->
+  <script>
+    (function () {
+      try {
+        var pt = sessionStorage.getItem('pt');
+        if (!pt) return;
+        sessionStorage.removeItem('pt');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.dataset.ptEnter = pt;
+      } catch (e) {}
+    }());
+  </script>
+</head>
+<body class="project project--exemplary-home">
+
+  <!-- Page transition curtain — inert until transition.js drives it -->
+  <div class="page-curtain" aria-hidden="true"></div>
+
+  <!-- Section counter — updated by scroll.js -->
+  <div class="section-counter" id="sectionCounter" aria-hidden="true">
+    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">08</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="nav__mark" href="index.html">YGREQ.STUDIO</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="work.html">The Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- FULL-SCREEN MENU OVERLAY -->
+  <div id="menu-overlay" class="menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-overlay__curtain" aria-hidden="true"></div>
+    <div class="menu-overlay__inner">
+      <nav class="menu-overlay__nav" aria-label="Primary navigation">
+        <ul class="menu-overlay__list">
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
+                <span class="menu-item__idx" aria-hidden="true">01</span>
+                <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
+              </a>
+              <ul class="menu-item__children" aria-label="The Work — projects">
+                <li><a href="exemplary-home.html" class="menu-item__child-link" data-for="exemplary-home" data-category="exemplary-home">Exemplary Home</a></li>
+                <li><a href="pride-and-prejudice.html" class="menu-item__child-link" data-for="pride-and-prejudice" data-category="pride-and-prejudice">Pride and Prejudice</a></li>
+                <li><a href="corps.html" class="menu-item__child-link" data-for="corps" data-category="ink">Corps</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
+                <span class="menu-item__idx" aria-hidden="true">02</span>
+                <span class="menu-item__label">About</span>
+              </a>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
+                <span class="menu-item__idx" aria-hidden="true">03</span>
+                <span class="menu-item__label">Contact</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+        <div class="menu-overlay__ext">
+          <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+      </nav>
+      <!-- Each project's preview image should use the SAME file in three places once real
+           photography exists: this menu panel, the home page's Featured Work tile, and the
+           case-study page's own hero image. Suggested convention: assets/work/<slug>-cover.jpg
+           (e.g. assets/work/exemplary-home-cover.jpg), referenced identically in all three spots,
+           so there's one file to update rather than three that can silently drift out of sync. -->
+      <div class="menu-overlay__media" aria-hidden="true">
+        <div class="menu-media" data-for="corps">
+          <img src="assets/work/corps/cover.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="work">
+          <img src="assets/menu/the-work.jpg" alt="A pile of pale rubble in a foggy field — from Exemplary Home, rural north-western Bulgaria." loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="exemplary-home">
+          <img src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="pride-and-prejudice">
+          <img src="assets/work/pride-and-prejudice/cover.jpg" alt="Sofia Opera & Ballet × British Embassy — Pride and Prejudice, 2024" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="about">
+          <img src="assets/about/portrait.jpg" alt="Yassen Grigorov" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="contact">
+          <img src="assets/menu/contact.jpg" alt="The inside of a red telephone box — handset, coin slot and a worn BT notice." loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 CASE HERO — first section clears fixed nav -->
+  <section class="section--tight section--first">
+    <div class="wrap">
+      <h1 class="case-hero__title" data-reveal data-reveal-type="mask">Exemplary Home</h1>
+      <span class="label case-hero__tags" data-reveal>Documentary Photography · Exhibition · Editorial</span>
+    </div>
+  </section>
+
+  <!-- 02 PROJECT -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Project</span>
+      <p class="case-prose measure-wide" data-reveal>Exemplary Home is a documentary project exploring rural north-western Bulgaria — a region shaped by communism, abandoned by the post-Soviet rush to globalise, and largely overlooked by the country it belongs to. Shot on medium format film over winter and spring 2019–2020, the work won 2nd place at the International Photography Awards, 3rd at the Bulgarian Photography Awards, and was the basis of my first solo exhibition at KO-OP, Sofia.</p>
+    </div>
+    <div class="wrap case-media">
+      <img class="zoomable" src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" data-reveal data-reveal-type="image" data-parallax decoding="async" />
+    </div>
+  </section>
+
+  <!-- 03 ORIGIN -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Origin</span>
+      <p class="case-prose measure-wide" data-reveal>The project began as a personal reckoning. After seven years in London, my view of Bulgaria had calcified into something distant and frustrated. The challenge was to return to the country honestly — without nostalgia, without resentment — and to find a way of representing it that didn't flatten its complexity into either lament or romance.</p>
+    </div>
+  </section>
+
+  <!-- 04 METHOD — sticky case-meta rail alongside body copy -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Method</span>
+    </div>
+    <div class="wrap case-layout" style="margin-top:clamp(24px,3vw,36px)">
+      <div class="case-meta" data-reveal>
+        <div class="case-meta__item">
+          <span class="label">Client</span>
+          <span class="case-meta__value">Self-initiated</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Role</span>
+          <span class="case-meta__value">Photographer</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Year</span>
+          <span class="case-meta__value">2019–2020</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Discipline</span>
+          <span class="case-meta__value">Documentary Photography</span>
+        </div>
+      </div>
+      <p class="case-prose measure-wide" data-reveal>I worked slowly and locally. Time spent in conversation before time spent shooting. I switched from a handheld Mamiya 7 to a tripod-mounted RB67, which forced a slower, more deliberate working rhythm and changed the relationship between photographer, camera, and subject. The aim was to give the people and places I encountered the dignity of being properly seen.</p>
+    </div>
+  </section>
+
+  <!-- 05 OUTCOME — prose + media wall -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Outcome</span>
+      <p class="case-prose measure-wide" data-reveal>The final body of work brings together environmental images, interiors, portraits, and details — sequenced to read as an extended piece of writing rather than a series of single frames. Shown across large framed prints and smaller loose photographs at KO-OP, the exhibition was designed to mirror the way memory and place actually work: layered, uneven, returned to repeatedly.</p>
+    </div>
+    <div class="wrap case-gallery">
+      <img class="zoomable" src="assets/work/exemplary-home/img_002.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      <img class="zoomable" src="assets/work/exemplary-home/img_009.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      <img class="zoomable" src="assets/work/exemplary-home/img_022.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      <div class="case-media--pair">
+        <img class="zoomable" src="assets/work/exemplary-home/img012.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+        <img class="zoomable" src="assets/work/exemplary-home/img_031.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      </div>
+      <img class="zoomable" src="assets/work/exemplary-home/img_015-Edit.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      <div class="case-media--pair">
+        <img class="zoomable" src="assets/work/exemplary-home/img_032.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+        <img class="zoomable" src="assets/work/exemplary-home/img_036-Edit.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      </div>
+      <div class="case-media--pair">
+        <img class="zoomable" src="assets/work/exemplary-home/img_039.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+        <img class="zoomable" src="assets/work/exemplary-home/img_056-Edit.jpg" alt="Exemplary Home — north-western Bulgaria" data-reveal data-reveal-type="image" data-parallax loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 RECOGNITION -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Recognition</span>
+      <ul class="case-list" data-reveal>
+        <li>2nd place, International Photography Awards 2020</li>
+        <li>3rd place, Bulgarian Photography Awards 2021</li>
+        <li>Solo exhibition at KO-OP, Sofia (2021)</li>
+        <li>Featured in Photomonitor, mnngful stories, and MAP6 Photography Collective</li>
+        <li>Limited edition prints sold via Saatchi Art and TRiCERA</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 07 REFLECTION -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <span class="label case-section__eyebrow" data-reveal>Reflection</span>
+      <p class="case-prose measure-wide" data-reveal>Exemplary Home set the principles the rest of the practice runs on: slowness, attention, and a personal investment that doesn't apologise for being there. The work is sharper when I'm fully in it — and I've structured the practice so I can be.</p>
+    </div>
+  </section>
+
+  <!-- 08 NEXT — takes the destination's field: Pride and Prejudice's poster navy -->
+  <section class="section section--pride-and-prejudice case-next">
+    <div class="wrap case-next__body">
+      <span class="label" data-reveal>Next</span>
+      <a class="case-next__link" href="pride-and-prejudice.html" data-reveal data-reveal-type="mask">Sofia Opera &amp; Ballet × British Embassy <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer section--ink">
+    <div class="wrap">
+      <div class="footer__top">
+        <div class="footer__mark">YGREQ.STUDIO</div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="work.html">The Work</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="https://instagram.com/ygreq" rel="me">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </nav>
+      </div>
+      <div class="footer__legal">
+        <span class="label">Sofia, Bulgaria</span>
+        <span class="label">© <span id="year">2026</span> YGREQ.STUDIO</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="transition.js"></script>
+  <script type="module" src="scroll.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Corps — YGREQ.STUDIO</title>
+  <meta name="description" content="Corps — a long-term documentary project made with the Sofia Opera and Ballet. The collective labour a company performs before anything is performed for anyone. Ongoing, begun June 2026." />
+
+  <meta property="og:title" content="Corps — YGREQ.STUDIO" />
+  <meta property="og:description" content="A long-term documentary project made with the Sofia Opera and Ballet. Ongoing — 2026–." />
+  <meta property="og:type" content="website" />
+  <!-- OG image slot — the project cover; swap if a stronger social frame is chosen -->
+  <meta property="og:image" content="assets/work/corps/cover.jpg" />
+
+  <!-- browser-chrome tint (Safari toolbar, iOS/Android address bar): this page's
+       field colour, matching the page-transition curtain that arrives on it.
+       Mirrors the tokens in styles.css :root — keep the two in step. -->
+  <meta name="theme-color" content="#1A1B15" /> <!-- black — Corps runs on the dark field -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- page transition: paint the incoming curtain before the first paint, so the
+       page never flashes underneath it. See transition.js / .page-curtain. -->
+  <script>
+    (function () {
+      try {
+        var pt = sessionStorage.getItem('pt');
+        if (!pt) return;
+        sessionStorage.removeItem('pt');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.dataset.ptEnter = pt;
+      } catch (e) {}
+    }());
+  </script>
+</head>
+<body class="project project--corps page--ink">
+
+  <!-- Page transition curtain — inert until transition.js drives it -->
+  <div class="page-curtain" aria-hidden="true"></div>
+
+  <!-- Section counter — updated by scroll.js -->
+  <div class="section-counter" id="sectionCounter" aria-hidden="true">
+    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">12</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="nav__mark" href="index.html">YGREQ.STUDIO</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="work.html">The Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- FULL-SCREEN MENU OVERLAY -->
+  <div id="menu-overlay" class="menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-overlay__curtain" aria-hidden="true"></div>
+    <div class="menu-overlay__inner">
+      <nav class="menu-overlay__nav" aria-label="Primary navigation">
+        <ul class="menu-overlay__list">
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
+                <span class="menu-item__idx" aria-hidden="true">01</span>
+                <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
+              </a>
+              <ul class="menu-item__children" aria-label="The Work — projects">
+                <li><a href="exemplary-home.html" class="menu-item__child-link" data-for="exemplary-home" data-category="exemplary-home">Exemplary Home</a></li>
+                <li><a href="pride-and-prejudice.html" class="menu-item__child-link" data-for="pride-and-prejudice" data-category="pride-and-prejudice">Pride and Prejudice</a></li>
+                <li><a href="corps.html" class="menu-item__child-link" data-for="corps" data-category="ink">Corps</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
+                <span class="menu-item__idx" aria-hidden="true">02</span>
+                <span class="menu-item__label">About</span>
+              </a>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
+                <span class="menu-item__idx" aria-hidden="true">03</span>
+                <span class="menu-item__label">Contact</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+        <div class="menu-overlay__ext">
+          <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+      </nav>
+      <!-- Each project's preview image should use the SAME file in three places once real
+           photography exists: this menu panel, the home page's Featured Work tile, and the
+           case-study page's own hero image. Suggested convention: assets/work/<slug>-cover.jpg
+           (e.g. assets/work/exemplary-home-cover.jpg), referenced identically in all three spots,
+           so there's one file to update rather than three that can silently drift out of sync. -->
+      <div class="menu-overlay__media" aria-hidden="true">
+        <div class="menu-media" data-for="corps">
+          <img src="assets/work/corps/cover.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="work">
+          <img src="assets/menu/the-work.jpg" alt="A pile of pale rubble in a foggy field — from Exemplary Home, rural north-western Bulgaria." loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="exemplary-home">
+          <img src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="pride-and-prejudice">
+          <img src="assets/work/pride-and-prejudice/cover.jpg" alt="Sofia Opera & Ballet × British Embassy — Pride and Prejudice, 2024" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="about">
+          <img src="assets/about/portrait.jpg" alt="Yassen Grigorov" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="contact">
+          <img src="assets/menu/contact.jpg" alt="The inside of a red telephone box — handset, coin slot and a worn BT notice." loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 HERO — title + descriptor + status, then the lead frame. First section clears the fixed nav. -->
+  <section class="section--tight section--first">
+    <div class="wrap">
+      <h1 class="case-hero__title" data-reveal data-reveal-type="mask">Corps</h1>
+      <span class="label case-hero__tags" data-reveal>A long-term documentary project with the Sofia Opera and Ballet</span>
+      <span class="label corps-hero__status" data-reveal>Ongoing — 2026–</span>
+    </div>
+    <div class="wrap case-media">
+      <img class="zoomable" src="assets/work/corps/cover.jpg" alt="Corps — a rehearsal frame from the Sofia Opera and Ballet" data-reveal data-reveal-type="image" data-parallax decoding="async" />
+    </div>
+  </section>
+
+  <!-- 02 STATEMENT — narrow reading measure, no image competition -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <h2 class="label case-section__eyebrow" data-reveal>Statement</h2>
+      <p class="case-prose measure-read" data-reveal>Corps is a documentary project made with the ballet company of the Sofia Opera and Ballet. What drew me to it wasn't ballet as a subject, but the dancers — people who turn up every day to do the same thing they did yesterday, better.</p>
+      <p class="case-prose measure-read" data-reveal style="margin-top:clamp(18px,2.4vw,28px)">I struggle with repetitive, predictable work. A whole cohort of people who don't is magnetic. I was drawn in particular to the corps de ballet — the literal body of a company, tens of people who stay largely unknown to the public. Many will never have their turn in the spotlight, through bad luck, injury, or simply being overlooked. The question I started with was: why do it?</p>
+      <p class="case-prose measure-read" data-reveal style="margin-top:clamp(18px,2.4vw,28px)">What I found was a group of fiercely disciplined people whose focus on perfection isn't for an audience, or even for each other. Marta Petkova, the company's prima, told me the only person she has ever danced for is herself — you get up every morning and go to battle against yourself. Any day that ends without her feeling she has pushed her limits is a rest day.</p>
+      <p class="case-prose measure-read" data-reveal style="margin-top:clamp(18px,2.4vw,28px)">There is also far more superstition than I expected. Red threads, small rituals before going on, firm views about which new pointe shoe belongs on which foot. For an art form apparently built around being looked at, it is intensely private.</p>
+      <p class="case-prose measure-read" data-reveal style="margin-top:clamp(18px,2.4vw,28px)">A photograph can't show any of that directly. What it can show is the ordinary set of conditions the commitment happens inside — scuffed rooms, improvised equipment, endless waiting, a stage that has to be swept dry before anyone can dance on it. Nobody is watching, and they do it anyway.</p>
+      <p class="case-prose measure-read" data-reveal style="margin-top:clamp(18px,2.4vw,28px)">The work is made with the company rather than about it, and it is not finished. This page shows selected frames from an ongoing edit.</p>
+    </div>
+  </section>
+
+  <!-- 03 METADATA — the .case-meta pairs, laid out as a standalone horizontal rail -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <h2 class="label case-section__eyebrow" data-reveal>Metadata</h2>
+      <div class="case-meta case-meta--grid" data-reveal>
+        <div class="case-meta__item">
+          <span class="label">Project</span>
+          <span class="case-meta__value">Corps</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Subject</span>
+          <span class="case-meta__value">Sofia Opera and Ballet</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Status</span>
+          <span class="case-meta__value">Ongoing, begun June 2026</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Location</span>
+          <span class="case-meta__value">Sofia, Bulgaria</span>
+        </div>
+        <div class="case-meta__item">
+          <span class="label">Format</span>
+          <span class="case-meta__value">Documentary photography</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 IMAGE SEQUENCES — the six working threads.
+       Rendered from corps-data.js (the one file to edit for images + captions).
+       This runs before main.js/scroll.js so reveals, parallax and the lightbox
+       pick up every generated image. -->
+  <div id="corps-sequences">
+    <noscript>
+      <section class="section--tight case-section">
+        <div class="wrap">
+          <p class="case-prose measure-read">The image sequences load with JavaScript enabled. The six threads are: The House, Class, The Same Thing Again, Ritual, Waiting, and The Apparatus.</p>
+        </div>
+      </section>
+    </noscript>
+  </div>
+
+  <!-- 05 PROCESS NOTE — method, in the same reading measure -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <h2 class="label case-section__eyebrow" data-reveal>Process</h2>
+      <p class="case-prose measure-read" data-reveal>Two kinds of distance. Optical: a long lens on the rehearsal floor, where moving closer would interrupt the work. Physical: a 50mm at the edges of the day — warm-ups, breaks, waiting, shoes being broken in — as trust makes proximity possible. Colour and monochrome are decided frame by frame in post rather than as a house style: monochrome where gesture and grain carry it, colour where colour is information.</p>
+    </div>
+  </section>
+
+  <!-- 06 ONGOING -->
+  <section class="section--tight case-section">
+    <div class="wrap">
+      <h2 class="label case-section__eyebrow" data-reveal>Ongoing</h2>
+      <p class="case-prose measure-read" data-reveal>The edit is open and the work is continuing. If you are thinking about exhibition, publication, or a collaboration, I would be glad to talk.</p>
+    </div>
+  </section>
+
+  <!-- 07 NEXT — takes the destination's field: The Work is clay -->
+  <section class="section section--clay-cream case-next">
+    <div class="wrap case-next__body">
+      <span class="label" data-reveal>Next</span>
+      <a class="case-next__link" href="work.html" data-reveal data-reveal-type="mask">The Work <span class="arr">→</span></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer section--ink">
+    <div class="wrap">
+      <div class="footer__top">
+        <div class="footer__mark">YGREQ.STUDIO</div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="work.html">The Work</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="https://instagram.com/ygreq" rel="me">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </nav>
+      </div>
+      <div class="footer__legal">
+        <span class="label">Sofia, Bulgaria</span>
+        <span class="label">© <span id="year">2026</span> YGREQ.STUDIO</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- corps-data.js MUST load before main.js/scroll.js: it builds the sequence
+       sections synchronously so the reveal/parallax/lightbox wiring in those
+       files observes the generated images. -->
+  <script src="corps-data.js"></script>
+  <script src="main.js"></script>
+  <script src="transition.js"></script>
+  <script type="module" src="scroll.js"></script>
+</body>
+</html>

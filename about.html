@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>About — YGREQ.STUDIO</title>
+  <meta name="description" content="YGREQ.STUDIO is a visual creative practice based in Sofia, run by Yassen Grigorov. Photography, creative direction, and brand identity for a handful of brands and institutions each year." />
+
+  <meta property="og:title" content="About — YGREQ.STUDIO" />
+  <meta property="og:description" content="A visual creative practice based in Sofia. Closing the gap between what a brand is and how it reads." />
+  <meta property="og:type" content="website" />
+
+  <!-- browser-chrome tint (Safari toolbar, iOS/Android address bar): this page's
+       field colour, matching the page-transition curtain that arrives on it.
+       Mirrors the tokens in styles.css :root — keep the two in step. -->
+  <meta name="theme-color" content="#565C49" /> <!-- olive -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- page transition: paint the incoming curtain before the first paint, so the
+       page never flashes underneath it. See transition.js / .page-curtain. -->
+  <script>
+    (function () {
+      try {
+        var pt = sessionStorage.getItem('pt');
+        if (!pt) return;
+        sessionStorage.removeItem('pt');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        document.documentElement.dataset.ptEnter = pt;
+      } catch (e) {}
+    }());
+  </script>
+</head>
+<body>
+
+  <!-- Page transition curtain — inert until transition.js drives it -->
+  <div class="page-curtain" aria-hidden="true"></div>
+
+  <!-- Section counter — updated by scroll.js -->
+  <div class="section-counter" id="sectionCounter" aria-hidden="true">
+    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">06</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="nav__mark" href="index.html">YGREQ.STUDIO</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="menu-overlay">Menu</button>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="work.html">The Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- FULL-SCREEN MENU OVERLAY -->
+  <div id="menu-overlay" class="menu-overlay" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+    <div class="menu-overlay__curtain" aria-hidden="true"></div>
+    <div class="menu-overlay__inner">
+      <nav class="menu-overlay__nav" aria-label="Primary navigation">
+        <ul class="menu-overlay__list">
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
+                <span class="menu-item__idx" aria-hidden="true">01</span>
+                <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
+              </a>
+              <ul class="menu-item__children" aria-label="The Work — projects">
+                <li><a href="exemplary-home.html" class="menu-item__child-link" data-for="exemplary-home" data-category="exemplary-home">Exemplary Home</a></li>
+                <li><a href="pride-and-prejudice.html" class="menu-item__child-link" data-for="pride-and-prejudice" data-category="pride-and-prejudice">Pride and Prejudice</a></li>
+                <li><a href="corps.html" class="menu-item__child-link" data-for="corps" data-category="ink">Corps</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
+                <span class="menu-item__idx" aria-hidden="true">02</span>
+                <span class="menu-item__label">About</span>
+              </a>
+            </div>
+          </li>
+          <li class="menu-item">
+            <div class="menu-item__inner">
+              <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
+                <span class="menu-item__idx" aria-hidden="true">03</span>
+                <span class="menu-item__label">Contact</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+        <div class="menu-overlay__ext">
+          <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+      </nav>
+      <!-- Each project's preview image should use the SAME file in three places once real
+           photography exists: this menu panel, the home page's Featured Work tile, and the
+           case-study page's own hero image. Suggested convention: assets/work/<slug>-cover.jpg
+           (e.g. assets/work/exemplary-home-cover.jpg), referenced identically in all three spots,
+           so there's one file to update rather than three that can silently drift out of sync. -->
+      <div class="menu-overlay__media" aria-hidden="true">
+        <div class="menu-media" data-for="corps">
+          <img src="assets/work/corps/cover.jpg" alt="Corps — Sofia Opera and Ballet, ongoing documentary" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="work">
+          <img src="assets/menu/the-work.jpg" alt="A pile of pale rubble in a foggy field — from Exemplary Home, rural north-western Bulgaria." loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="exemplary-home">
+          <img src="assets/work/exemplary-home/cover.jpg" alt="Exemplary Home — rural north-western Bulgaria, medium-format film" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="pride-and-prejudice">
+          <img src="assets/work/pride-and-prejudice/cover.jpg" alt="Sofia Opera & Ballet × British Embassy — Pride and Prejudice, 2024" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="about">
+          <img src="assets/about/portrait.jpg" alt="Yassen Grigorov" loading="lazy" decoding="async" />
+        </div>
+        <div class="menu-media" data-for="contact">
+          <img src="assets/menu/contact.jpg" alt="The inside of a red telephone box — handset, coin slot and a worn BT notice." loading="lazy" decoding="async" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 TOP STATEMENT — olive field, first section clears fixed nav -->
+  <section class="section section--first section--olive">
+    <div class="wrap page-statement">
+      <p data-reveal data-reveal-type="mask">YGREQ is a visual creative practice based in Sofia. It's built on a simple observation: most of the time, what you say and how you say it matters more than what you're actually doing. I work with a handful of brands and institutions each year on closing the gap between the two.</p>
+    </div>
+  </section>
+
+  <!-- 02 ORIGIN -->
+  <section class="section--tight">
+    <div class="wrap">
+      <span class="label" data-reveal>Origin</span>
+      <p class="lead measure-wide" data-reveal style="margin-top:18px">Seven years in London shaped the eye — studying photography at Westminster, shooting commercially for fashion and real estate, building a documentary practice exhibited and awarded internationally. The return to Sofia sharpened the argument, through communications work for the British Embassy and Khan Academy Bulgaria. YGREQ.STUDIO is what happens when all of it finally has its own name attached.</p>
+    </div>
+  </section>
+
+  <!-- 03 ASIDE — paragraph + image -->
+  <section class="section--tight">
+    <div class="wrap about-aside">
+      <div class="ph ph--land" data-ph="Image — the practice, restrained colour" data-reveal data-reveal-type="image" data-parallax></div>
+      <p class="measure" data-reveal>The practice runs alongside a full-time role at the British Embassy in Sofia. That dual setup is deliberate — it keeps the studio selective and means every engagement is one I've chosen to take on, not one I needed to.</p>
+    </div>
+  </section>
+
+  <!-- 04 HOW I WORK -->
+  <section class="section--tight">
+    <div class="wrap">
+      <span class="label" data-reveal>How I work</span>
+      <p class="lead measure-wide" data-reveal style="margin-top:18px">The criterion is simple. I only take on brands I'm excited about — where I'd already be a customer, where I understand what they're reaching for, where the taste and instincts are already aligned. What I do from there depends on the brand. Some need their existing identity translated for a new audience. Others are ready to build something from the ground up. Either way, starting from alignment is what makes the rest work.</p>
+    </div>
+  </section>
+
+  <!-- 05 SINGLE PROFILE -->
+  <section class="section">
+    <div class="wrap profile">
+      <img class="profile__portrait" src="assets/about/portrait.jpg" alt="Yassen Grigorov" data-reveal data-reveal-type="image" loading="lazy" decoding="async" />
+      <div class="profile__text" data-reveal>
+        <span class="profile__title">Photographer · Creative Director · Founder</span>
+        <p class="measure-wide">Yassen is a Sofia-based photographer and creative director with a background in documentary photography and a working knowledge of the luxury and hospitality markets gathered across seven years in London. He founded YGREQ.STUDIO to bring photography, creative direction, and brand identity together under one practice — and to work selectively with the brands and institutions worth the attention.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 DISCIPLINES -->
+  <section class="section--tight">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:clamp(20px,3vw,34px)">
+        <span class="label" data-reveal>Disciplines</span>
+        <span class="label" data-reveal>Six ways in</span>
+      </div>
+      <div class="disc" data-reveal>
+        <div class="disc__item"><span class="disc__num">01</span><span class="disc__name">Photography</span></div>
+        <div class="disc__item"><span class="disc__num">02</span><span class="disc__name">Creative Direction</span></div>
+        <div class="disc__item"><span class="disc__num">03</span><span class="disc__name">Brand Identity</span></div>
+        <div class="disc__item"><span class="disc__num">04</span><span class="disc__name">Content Production</span></div>
+        <div class="disc__item"><span class="disc__num">05</span><span class="disc__name">Motion</span></div>
+        <div class="disc__item"><span class="disc__num">06</span><span class="disc__name">Editorial</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer section--ink">
+    <div class="wrap">
+      <div class="footer__top">
+        <div class="footer__mark">YGREQ.STUDIO</div>
+        <nav class="footer__links" aria-label="Footer">
+          <a href="work.html">The Work</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="https://instagram.com/ygreq" rel="me">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </nav>
+      </div>
+      <div class="footer__legal">
+        <span class="label">Sofia, Bulgaria</span>
+        <span class="label">© <span id="year">2026</span> YGREQ.STUDIO</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="transition.js"></script>
+  <script type="module" src="scroll.js"></script>
+</body>
+</html>

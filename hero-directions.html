@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>YGREQ.STUDIO — Hero directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+<style>
+@font-face{
+  font-family:'Gambarino';
+  src:url('assets/fonts/Gambarino-Regular.woff2') format('woff2');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+:root{
+  --paper:#E5DFD2; --ink:#23241D; --cream:#ECE7DB;
+  --clay:#AE674C; --clay-strong:#9A5942; --olive:#565C49;
+  --cobalt:#1A4F92; --stone:#847E72; --black:#1A1B15;
+  --line:rgba(35,36,29,.14);
+  --fs-label:.72rem; --ls-label:.14em;
+  --gut:clamp(20px,5vw,80px);
+  --font-display:'Gambarino',serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  font-family:"Inter",system-ui,sans-serif; color:var(--ink); background:var(--black);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+@media (pointer:fine){ body{cursor:none;} a{cursor:none;} }
+.label{font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase; font-weight:500;}
+
+/* ---- scroll container ---- */
+.deck{height:100svh; overflow-y:scroll; scroll-snap-type:y mandatory; scroll-behavior:smooth;}
+.deck::-webkit-scrollbar{width:0;}
+
+/* ---- direction index (fixed) ---- */
+.index{
+  position:fixed; top:clamp(18px,2.4vw,30px); right:var(--gut); z-index:80;
+  display:flex; gap:14px; mix-blend-mode:difference; color:#fff;
+}
+.index a{
+  font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase;
+  color:#fff; text-decoration:none; opacity:.45; transition:opacity .3s;
+}
+.index a:hover,.index a.is-active{opacity:1;}
+.brand-tag{
+  position:fixed; top:clamp(18px,2.4vw,30px); left:var(--gut); z-index:80;
+  font-family:"DM Sans",sans-serif; font-weight:600; letter-spacing:-.01em; font-size:.95rem;
+  mix-blend-mode:difference; color:#fff;
+}
+
+/* ---- each direction ---- */
+.dir{position:relative; height:100svh; scroll-snap-align:start; overflow:hidden;}
+.hero{position:absolute; inset:0; overflow:hidden;}
+
+/* drifting texture revealed through the letterforms */
+.hero__tex{
+  position:absolute; inset:0; will-change:transform,filter;
+  background-size:220% 220%, 260% 260%;
+  animation:drift 26s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{background-position:0% 0%,100% 0%;}
+  100%{background-position:100% 100%,0% 100%;}
+}
+
+/* A — Ember: warm motion through letters, near-black field */
+.dir--a{background:var(--black);}
+.dir--a .hero__tex{
+  background:
+    radial-gradient(120% 140% at 22% 12%, #C2724F 0%, #6E4332 34%, #1c1512 70%, #0a0807 100%),
+    linear-gradient(118deg, #7a5240, #14100d 46%, #5d6149 72%, #14100d);
+  filter:grayscale(.32) contrast(1.08) brightness(1.02);
+}
+.dir--a .hero__cover{fill:#0A0A09;}
+
+/* B — Field: cobalt field, warm light revealed through letters */
+.dir--b{background:var(--cobalt);}
+.dir--b .hero__tex{
+  background:
+    radial-gradient(130% 150% at 70% 30%, #F0E7D6 0%, #D9A77F 30%, #B16A4C 58%, #6f3f2e 100%),
+    linear-gradient(120deg, #E9DFcd, #B7704f 50%, #ECE7DB);
+  filter:contrast(1.05) saturate(1.02);
+}
+.dir--b .hero__cover{fill:#1A4F92;}
+
+/* C — Spectrum: colour drifts through the mark */
+.dir--c{background:#0d0c0a;}
+.dir--c .hero__tex{
+  background:
+    radial-gradient(120% 140% at 30% 20%, #2E6FB8 0%, #1A4F92 26%, #565C49 55%, #1d1a14 85%),
+    linear-gradient(125deg, #1A4F92, #565C49 45%, #AE674C 75%, #1d1a14);
+  filter:saturate(1.05) contrast(1.04);
+  animation:drift 26s ease-in-out infinite alternate, hue 34s linear infinite;
+}
+@keyframes hue{ 0%{filter:saturate(1.05) contrast(1.04) hue-rotate(0deg);} 100%{filter:saturate(1.05) contrast(1.04) hue-rotate(360deg);} }
+
+/* SVG mask sits over the texture */
+.hero__mask{position:absolute; inset:0; width:100%; height:100%;}
+
+/* grain — per hero, blended */
+.hero__grain{position:absolute; inset:0; width:100%; height:100%; mix-blend-mode:soft-light; opacity:.5; pointer-events:none;}
+
+/* foot */
+.hero__foot{
+  position:absolute; left:var(--gut); right:var(--gut); bottom:clamp(22px,4vw,44px);
+  display:flex; justify-content:space-between; align-items:flex-end; gap:20px;
+  mix-blend-mode:difference; color:#fff;
+}
+.hero__foot .label{color:rgba(255,255,255,.8);}
+.hero__scroll{font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase;}
+.dir--c .hero__scroll{animation:pulse 2.6s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.55;} 50%{opacity:1;}}
+
+/* badge + note card */
+.note{
+  position:absolute; left:var(--gut); top:clamp(78px,12vh,120px); z-index:5;
+  max-width:min(420px,72vw);
+}
+.note__badge{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase;
+  color:#fff; mix-blend-mode:difference; margin-bottom:14px;
+}
+.note__badge b{
+  font-family:"DM Sans",sans-serif; font-weight:600; letter-spacing:.04em;
+  border:1px solid rgba(255,255,255,.5); border-radius:999px; padding:3px 10px;
+}
+.note__title{
+  font-family:var(--font-display); font-weight:400; line-height:1;
+  letter-spacing:-.02em; font-size:clamp(1.6rem,3vw,2.6rem);
+  color:#fff; mix-blend-mode:difference; margin:0 0 10px;
+}
+.note__body{
+  font-size:.92rem; line-height:1.5; color:rgba(255,255,255,.82);
+  mix-blend-mode:difference; max-width:38ch;
+}
+.dir--b .note__body,.dir--b .note__title,.dir--b .note__badge{mix-blend-mode:normal; color:var(--cream);}
+
+/* colour-rhythm chips bottom-left of note */
+.chips{display:flex; gap:6px; margin-top:18px;}
+.chips i{width:34px; height:14px; border-radius:2px; display:block; outline:1px solid rgba(255,255,255,.25);}
+
+/* custom cursor */
+.cursor{
+  position:fixed; top:0; left:0; z-index:120; width:30px; height:30px; margin:-15px 0 0 -15px;
+  border:1px solid #fff; border-radius:50%; mix-blend-mode:difference;
+  pointer-events:none; transition:width .25s,height .25s,margin .25s,opacity .3s; opacity:0;
+}
+.cursor.is-on{opacity:1;}
+.cursor.is-hover{width:54px; height:54px; margin:-27px 0 0 -27px;}
+@media (pointer:coarse){ .cursor{display:none;} }
+
+@media (max-width:640px){
+  .note{top:auto; bottom:90px;}
+  .hero__foot{flex-direction:column; align-items:flex-start; gap:8px; bottom:14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="brand-tag">YGREQ.STUDIO</div>
+<nav class="index" aria-label="Directions">
+  <a href="#a" data-i="a">1a</a>
+  <a href="#b" data-i="b">1b</a>
+  <a href="#c" data-i="c">1c</a>
+</nav>
+
+<div class="cursor" id="cursor"></div>
+
+<main class="deck" id="deck">
+
+  <!-- 1a — EMBER -->
+  <section class="dir dir--a" id="a" data-dir="a">
+    <div class="hero">
+      <div class="hero__tex"></div>
+      <svg class="hero__mask" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs><mask id="m-a"><rect width="1600" height="900" fill="#fff"/>
+          <text x="800" y="470" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="190" letter-spacing="-4" fill="#000">YGREQ.STUDIO</text>
+        </mask></defs>
+        <rect class="hero__cover" width="1600" height="900" mask="url(#m-a)"/>
+      </svg>
+      <canvas class="hero__grain" data-grain></canvas>
+      <div class="note">
+        <span class="note__badge"><b>1a</b> Ember</span>
+        <h2 class="note__title">Warmth earned, not poured</h2>
+        <p class="note__body">The field stays near-black; colour lives <em>inside</em> the letterforms — warm clay and olive light drifting behind the mark. Colour returns only at section breaks below. Filmic grain on every surface. Gambarino scales up as you descend. The most restrained of the three — closest to the documentary register.</p>
+        <div class="chips"><i style="background:#0A0A09"></i><i style="background:#E5DFD2"></i><i style="background:#AE674C"></i><i style="background:#565C49"></i></div>
+      </div>
+      <div class="hero__foot">
+        <span class="label">Visual creative practice — Sofia, Bulgaria</span>
+        <span class="hero__scroll">Scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1b — FIELD -->
+  <section class="dir dir--b" id="b" data-dir="b">
+    <div class="hero">
+      <div class="hero__tex"></div>
+      <svg class="hero__mask" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs><mask id="m-b"><rect width="1600" height="900" fill="#fff"/>
+          <text x="800" y="470" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="190" letter-spacing="-4" fill="#000">YGREQ.STUDIO</text>
+        </mask></defs>
+        <rect class="hero__cover" width="1600" height="900" mask="url(#m-b)"/>
+      </svg>
+      <canvas class="hero__grain" data-grain></canvas>
+      <div class="note">
+        <span class="note__badge"><b>1b</b> Field</span>
+        <h2 class="note__title">Colour from the first frame</h2>
+        <p class="note__body">The hero is a cobalt field; warm light moves through the mark instead of the other way round. The page then travels through full colour fields — cobalt, paper, clay, olive — as architecture, not punctuation. Boldest, most graphic. Biggest type contrast between the serif and the small tracked labels.</p>
+        <div class="chips"><i style="background:#1A4F92"></i><i style="background:#E5DFD2"></i><i style="background:#AE674C"></i><i style="background:#565C49"></i></div>
+      </div>
+      <div class="hero__foot">
+        <span class="label">Visual creative practice — Sofia, Bulgaria</span>
+        <span class="hero__scroll">Scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1c — SPECTRUM -->
+  <section class="dir dir--c" id="c" data-dir="c">
+    <div class="hero">
+      <div class="hero__tex"></div>
+      <svg class="hero__mask" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs><mask id="m-c"><rect width="1600" height="900" fill="#fff"/>
+          <text x="800" y="470" text-anchor="middle" font-family="DM Sans,sans-serif" font-weight="600" font-size="190" letter-spacing="-4" fill="#000">YGREQ.STUDIO</text>
+        </mask></defs>
+        <rect class="hero__cover" width="1600" height="900" mask="url(#m-c)"/>
+      </svg>
+      <canvas class="hero__grain" data-grain></canvas>
+      <div class="note">
+        <span class="note__badge"><b>1c</b> Spectrum</span>
+        <h2 class="note__title">Colour, alive in the mark</h2>
+        <p class="note__body">Colour drifts slowly through the wordmark — cobalt to olive to clay — and recurs as living fields down the page. Type registers shift more often between Inter and Gambarino to keep the scroll engaging. The scroll cue and cursor are kinetic. The most dynamic, most colourful direction.</p>
+        <div class="chips"><i style="background:#1A4F92"></i><i style="background:#565C49"></i><i style="background:#AE674C"></i><i style="background:#E5DFD2"></i></div>
+      </div>
+      <div class="hero__foot">
+        <span class="label">Visual creative practice — Sofia, Bulgaria</span>
+        <span class="hero__scroll">Scroll</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- custom cursor ---------- */
+(function(){
+  if (matchMedia('(pointer:coarse)').matches) return;
+  const c = document.getElementById('cursor');
+  let x=innerWidth/2,y=innerHeight/2,tx=x,ty=y;
+  addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;c.classList.add('is-on');});
+  addEventListener('pointerover',e=>{ if(e.target.closest('a')) c.classList.add('is-hover'); });
+  addEventListener('pointerout',e=>{ if(e.target.closest('a')) c.classList.remove('is-hover'); });
+  (function loop(){ x+=(tx-x)*.18; y+=(ty-y)*.18; c.style.transform=`translate(${x}px,${y}px)`; requestAnimationFrame(loop); })();
+})();
+
+/* ---------- film grain (per hero, only while visible) ---------- */
+const TILE = 130;
+const noiseTile = (()=>{ const t=document.createElement('canvas'); t.width=t.height=TILE; return t; })();
+function regen(){
+  const ctx = noiseTile.getContext('2d');
+  const img = ctx.createImageData(TILE,TILE);
+  const d = img.data;
+  for(let i=0;i<d.length;i+=4){ const v=(Math.random()*255)|0; d[i]=d[i+1]=d[i+2]=v; d[i+3]=255; }
+  ctx.putImageData(img,0,0);
+}
+const grains = [...document.querySelectorAll('[data-grain]')].map(cv=>{
+  const ctx = cv.getContext('2d');
+  return {cv,ctx,visible:false,pattern:null};
+});
+function sizeGrain(g){
+  const r = g.cv.getBoundingClientRect();
+  const dpr = Math.min(devicePixelRatio||1, 1.5);
+  g.cv.width = Math.max(2, r.width*dpr|0); g.cv.height = Math.max(2, r.height*dpr|0);
+  g.ctx.scale(dpr,dpr); g._w=r.width; g._h=r.height;
+}
+addEventListener('resize', ()=>grains.forEach(sizeGrain));
+grains.forEach(sizeGrain);
+
+if (!reduce){
+  const io = new IntersectionObserver(es=>es.forEach(e=>{
+    const g = grains.find(x=>x.cv===e.target.querySelector('[data-grain]'));
+    if(g) g.visible = e.isIntersecting && e.intersectionRatio>0.4;
+  }),{threshold:[0,0.4,0.8]});
+  document.querySelectorAll('.dir').forEach(d=>io.observe(d));
+
+  let last=0;
+  (function tick(t){
+    if(t-last>90){ regen(); last=t;
+      grains.forEach(g=>{
+        if(!g.visible) return;
+        g.pattern = g.ctx.createPattern(noiseTile,'repeat');
+        g.ctx.clearRect(0,0,g._w,g._h);
+        g.ctx.fillStyle=g.pattern; g.ctx.fillRect(0,0,g._w,g._h);
+      });
+    }
+    requestAnimationFrame(tick);
+  })(0);
+} else {
+  regen();
+  grains.forEach(g=>{ g.pattern=g.ctx.createPattern(noiseTile,'repeat'); g.ctx.fillStyle=g.pattern; g.ctx.fillRect(0,0,g._w,g._h); });
+}
+
+/* ---------- active index highlight ---------- */
+const links = [...document.querySelectorAll('.index a')];
+const io2 = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting && e.intersectionRatio>0.5){
+    links.forEach(a=>a.classList.toggle('is-active', a.dataset.i===e.target.dataset.dir));
+  }
+}),{threshold:[0.5]});
+document.querySelectorAll('.dir').forEach(d=>io2.observe(d));
+</script>
+</body>
+</html>

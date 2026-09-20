@@ -1,0 +1,1749 @@
+/* ============================================================
+   YGREQ.STUDIO — base styles
+   Restrained, editorial. DM Sans body + switchable display serif.
+   ============================================================ */
+
+/* ---- self-hosted display serif: Gambarino (Fontshare / ITF licence) ---- */
+@font-face {
+  font-family: 'Gambarino';
+  src: url('assets/fonts/Gambarino-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ---- raw colour values ---- */
+  --paper:         #E5DFD2;
+  --ink:           #23241D;
+  --cream:         #ECE7DB;
+  --clay:          #AE674C;
+  --clay-strong:   #9A5942;
+  --olive:         #565C49;
+  --cobalt:        #1A4F92;
+  --stone:         #847E72;
+
+  /* per-project reds — see PER-PROJECT ACCENTS below. Raw values live here so
+     the curtain, the menu hover and transition.js can all read the same one. */
+  --red-exemplary-home: #DE4832;
+  --red-corps:          #EE1F25;
+  --navy-pride-and-prejudice: #1A2541;
+  --line:          rgba(35, 36, 29, 0.14);
+  --black:         #1A1B15;
+
+  /* ---- semantic / cascade-overrideable UI tokens ----
+     Colour-field sections (.section--*) override these locally;
+     components must read these, never the raw values above. */
+  --muted:         var(--stone);
+  --accent:        var(--clay);
+  --accent-strong: var(--clay-strong);
+
+  --maxw: 1480px;
+  --gut: clamp(20px, 5vw, 80px);
+
+  /* real portfolio photographs never render taller than this, at any width —
+     see the "real photography" rule below and the lightbox's own sizing */
+  --img-max-h: 86vh;
+
+  /* motion */
+  --ease-out:  cubic-bezier(.16, 1, .3, 1);
+  --ease-menu: cubic-bezier(.76, 0, .24, 1);
+  --dur-micro:  200ms;
+  --dur-std:    450ms;
+  --dur-menu:   700ms;
+
+  --fs-label: 0.72rem;
+  --ls-label: 0.14em;
+
+  /* fluid display sizes */
+  --fs-mega:  clamp(2.6rem, 9vw, 9rem);
+  --fs-h1:    clamp(2rem, 5.2vw, 4.6rem);
+  --fs-h2:    clamp(1.6rem, 3.4vw, 3rem);
+  --fs-lead:  clamp(1.15rem, 1.9vw, 1.8rem);
+  --fs-body:  clamp(1rem, 1.15vw, 1.18rem);
+
+  /* display serif — Gambarino; applied to expressive type only */
+  --font-display: 'Gambarino', serif;
+
+  /* menu overlay: idx-column width + link gap, shared so .menu-item__children
+     can always align flush under the label regardless of viewport width —
+     see .menu-item__idx / .menu-item__link / .menu-item__children below */
+  --menu-idx-w:   16px;
+  --menu-item-gap: clamp(14px, 2vw, 24px);
+}
+
+/* ---------- reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  color: var(--ink);
+  font-feature-settings: "kern" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* paper grain — baked asset (assets/grain.png), blended locally via
+     background-blend-mode (not a fixed page-covering mix-blend-mode layer,
+     which forced expensive recompositing against the hero's animation). */
+  background-color: var(--paper);
+  background-image: url("assets/grain.png");
+  background-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+}
+img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p { margin: 0; }
+
+::selection { background: var(--ink); color: var(--paper); }
+
+/* visible focus ring everywhere — reads var(--ink), which colour-field
+   sections already override locally, so it stays legible on paper and
+   on any .section--* background without a second set of rules */
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* visually hidden but still reachable by AT / not by keyboard when paired
+   with tabindex="-1" (used for the contact form's spam honeypot) */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- shared helpers ---------- */
+.wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gut); }
+
+.label {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.lead { font-size: var(--fs-lead); line-height: 1.32; letter-spacing: -0.01em; }
+.measure { max-width: 34ch; }
+.measure-wide { max-width: 50ch; }
+
+/* ---- fade-up reveal (body text, lists, small blocks) ---- */
+[data-reveal]:not([data-reveal-type]) {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 1.0s var(--ease-out) 80ms, transform 1.0s var(--ease-out) 80ms;
+}
+[data-reveal]:not([data-reveal-type]).is-in { opacity: 1; transform: none; }
+
+/* ---- mask reveal (display type — clip + translate up) ---- */
+.js [data-reveal-type="mask"] { overflow: hidden; padding-bottom: 0.15em; }
+.js [data-reveal-type="mask"] .reveal-inner {
+  display: block;
+  transform: translateY(106%);
+  transition: transform 950ms var(--ease-out) var(--reveal-delay, 60ms);
+  will-change: transform;
+}
+.js [data-reveal-type="mask"].is-in .reveal-inner { transform: translateY(0); }
+
+/* Line-by-line statement reveal */
+.reveal-line { display: block; }
+
+/* ---- image clip reveal ---- */
+.js [data-reveal-type="image"] {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1000ms var(--ease-menu);
+  will-change: clip-path;
+}
+.js [data-reveal-type="image"].is-in { clip-path: inset(0 0 0% 0); }
+
+/* ---- parallax frame ---- */
+.parallax-frame { position: relative; overflow: hidden; }
+.js .parallax-frame > * { transform-origin: center center; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal]:not([data-reveal-type]) { opacity: 1; transform: none; transition: none; }
+  .js [data-reveal-type="mask"] { overflow: visible; padding-bottom: 0; }
+  .js [data-reveal-type="mask"] .reveal-inner { transform: none; transition: none; }
+  .js [data-reveal-type="image"] { clip-path: none !important; transition: none; }
+  .js .parallax-frame > * { transform: none !important; }
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(18px, 2.4vw, 30px) var(--gut);
+  mix-blend-mode: difference;
+  color: #fff;
+}
+.nav__mark { font-family: "DM Sans", sans-serif; font-weight: 600; letter-spacing: -0.01em; font-size: 0.95rem; }
+
+/* no-JS baseline: show inline links, hide toggle */
+.nav__links { display: flex; gap: clamp(18px, 2.4vw, 40px); }
+.nav__links a { font-size: 0.95rem; opacity: 0.85; transition: opacity .25s; }
+.nav__links a:hover { opacity: 1; }
+.nav__toggle { display: none; background: none; border: 0; color: inherit; font: inherit; font-size: 0.95rem; cursor: pointer; padding: 0; }
+
+/* JS loaded: switch to overlay-driven toggle */
+.js .nav__links { display: none; }
+.js .nav__toggle { display: inline-flex; }
+
+/* ============================================================
+   HERO — animated wordmark: STUDIO rolls in Solari-style, letters
+   coloured with a warm clay/gold/olive gradient, over an Ember field.
+   ============================================================ */
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  background: var(--black);
+  overflow: hidden;
+}
+/* Ember field. (This replaces the earlier video-behind-mask concept —
+   letters are no longer cut-out windows, so a future hero video would
+   need its own masked layer rather than sitting in here.) */
+.hero__media {
+  position: absolute; inset: 0;
+  will-change: transform;
+  background: radial-gradient(88% 88% at 30% 22%, #331F17 0%, #180F0A 45%, #050302 100%);
+}
+.hero__grain { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: overlay; opacity: .5; pointer-events: none; }
+
+/* animated wordmark */
+.hero__wordmark {
+  position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center;
+  padding: 0 var(--gut); pointer-events: none;
+  font-family: "DM Sans", sans-serif; font-weight: 600; letter-spacing: -.03em;
+  font-size: clamp(2.2rem, 10.5vw, 9.5rem); line-height: 1;
+}
+.hero__wordmark-row { display: flex; align-items: flex-end; }
+.reel { display: inline-block; height: 1em; overflow: hidden; vertical-align: bottom; }
+.reel__strip { display: flex; flex-direction: column; will-change: transform; }
+.reel__cell {
+  height: 1em; display: flex; align-items: center; justify-content: center; line-height: 1;
+  background-image: linear-gradient(96deg, #E7C9A0 0%, #C87C54 26%, #A9583E 48%, #6E7A54 74%, #DDB989 100%);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
+.hero__foot {
+  /* bottom offset is the section-counter's own position plus clearance,
+     so the "01/09" counter (fixed, bottom-left, same gutter) never overlaps
+     the hero's label */
+  position: absolute; left: var(--gut); right: var(--gut); bottom: calc(clamp(22px, 4vw, 44px) + 30px);
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;
+  color: rgba(255,255,255,0.72);
+  mix-blend-mode: difference;
+  z-index: 3;
+}
+.hero__foot .label { color: rgba(255,255,255,0.72); }
+.hero__scroll { font-size: var(--fs-label); letter-spacing: var(--ls-label); text-transform: uppercase; }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+section { position: relative; }
+.section { padding-block: clamp(72px, 12vh, 160px); }
+.section--tight { padding-block: clamp(56px, 8vh, 110px); }
+
+.rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+/* intro: paragraph left, services right */
+.split {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: clamp(28px, 6vw, 90px);
+  align-items: start;
+}
+.services { list-style: none; margin: 0; padding: 0; }
+.services li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding: 18px 0; border-top: 1px solid var(--line);
+  font-size: clamp(1.2rem, 2vw, 1.7rem); letter-spacing: -0.01em;
+}
+.services li:last-child { border-bottom: 1px solid var(--line); }
+.services li span { font-size: var(--fs-label); letter-spacing: var(--ls-label); color: var(--muted); }
+
+/* intro strip — condensed statement on clay + full-bleed image beneath */
+.intro-strip { padding-block: clamp(40px, 6vw, 64px); }
+.intro-strip .wrap { display: flex; justify-content: center; text-align: center; }
+.intro-strip__text {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h2);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 26ch;
+}
+.intro-strip__link { display: block; }
+.intro-strip__image { width: 100%; }
+
+/* image + paired paragraphs */
+.archive { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 70px); align-items: end; }
+.archive__text { display: flex; flex-direction: column; gap: 14px; }
+
+/* big centred statement */
+.statement { text-align: left; }
+.statement p {
+  font-size: var(--fs-h1);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+  font-weight: 500;
+}
+.statement .cont { color: var(--muted); display: block; max-width: 40ch; margin-top: clamp(20px,3vw,34px); font-size: var(--fs-lead); line-height:1.34; letter-spacing:-0.01em; }
+
+/* approach: text + image */
+.approach { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 6vw, 90px); align-items: center; }
+
+/* disciplines grid */
+.disc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.disc__item {
+  background: var(--paper);
+  padding: clamp(26px, 4vw, 52px) clamp(20px, 3vw, 36px);
+  min-height: clamp(150px, 18vw, 230px);
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.disc__num, .disc__name { position: relative; z-index: 1; }
+.disc__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity var(--dur-micro) var(--ease-out), transform var(--dur-menu) var(--ease-out);
+  pointer-events: none;
+}
+.disc__img::after { display: none; }
+.disc__item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(35,36,29,.55), rgba(35,36,29,0) 55%);
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-out);
+  z-index: 1;
+}
+.disc__item:hover .disc__img { opacity: 1; transform: scale(1); }
+.disc__item:hover::before { opacity: 1; }
+.disc__item:hover .disc__num,
+.disc__item:hover .disc__name { color: var(--cream); }
+/* Motion tile — the reveal is a silent looping clip rather than a still.
+   <video> inherits .disc__img wholesale; this only kills the UA's own chrome. */
+.disc__img--video { background: var(--ink); }
+.disc__img--video::-webkit-media-controls { display: none !important; }
+
+/* Brand Identity tile — a flat identity lockup, not a photograph. Photographs
+   fill the tile edge to edge (object-fit: cover) and take the darkening
+   gradient so the cream label reads over them; a line mark on its own ground
+   can do neither. So this one tile keeps its paper field and its ink type, and
+   the lockup sits contained and top-weighted above them. Bottom padding
+   reserves the label's line so the mark's own wordmark never lands on it.
+   (The artwork is trimmed to its content bbox — the supplied file carried ~60%
+   empty margin, which shrank the wordmark past legibility at tile size.) */
+.disc__img--mark {
+  object-fit: contain;
+  object-position: center top;
+  background: var(--paper);
+  padding: clamp(24px, 3vw, 34px) clamp(20px, 2.6vw, 30px) clamp(68px, 8.6vw, 94px);
+  transform: none;               /* no scale-in — a mark shouldn't breathe */
+}
+.disc__item--mark:hover .disc__img--mark { transform: none; }
+.disc__item--mark:hover::before { opacity: 0; }   /* no gradient over a paper field */
+.disc__item--mark:hover .disc__num  { color: var(--muted); }
+.disc__item--mark:hover .disc__name { color: var(--ink); }
+
+/* No hover (phones, tablets): the reveal has nothing to trigger it, so the grid
+   would be six words and nothing else. Show the real media outright instead —
+   img and video only, never the .ph placeholders, which should keep looking
+   like the empty slots they are. */
+@media (hover: none) {
+  img.disc__img, video.disc__img { opacity: 1; transform: none; }
+  .disc__item:has(img.disc__img)::before,
+  .disc__item:has(video.disc__img)::before { opacity: 1; }
+  .disc__item:has(img.disc__img) .disc__num,
+  .disc__item:has(video.disc__img) .disc__num,
+  .disc__item:has(img.disc__img) .disc__name,
+  .disc__item:has(video.disc__img) .disc__name { color: var(--cream); }
+
+  /* The flat-mark tile keeps its paper field and ink type here too. These have
+     to carry :has() as well — without it they lose to the rules above, whose
+     :has(img.disc__img) makes them a specificity step more specific. */
+  .disc__item--mark:has(img.disc__img)::before { opacity: 0; }
+  .disc__item--mark:has(img.disc__img) .disc__num  { color: var(--muted); }
+  .disc__item--mark:has(img.disc__img) .disc__name { color: var(--ink); }
+}
+
+.disc__num { font-size: var(--fs-label); letter-spacing: var(--ls-label); color: var(--muted); transition: color var(--dur-micro) var(--ease-out); }
+.disc__name { font-size: clamp(1.25rem, 2.1vw, 1.9rem); letter-spacing: -0.01em; transition: color var(--dur-micro) var(--ease-out); }
+
+/* ---- display serif (Gambarino) — expressive type only ----
+   DM Sans stays on: .nav__mark, .footer__mark, hero SVG wordmark.
+   Inter handles: body, .label, services list, everything else. */
+.menu-item__label,
+.statement p,
+.cta h2,
+.disc__name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+}
+/* Menu labels are display-sized — Gambarino is top-heavy at large sizes,
+   pull line-height tight and ease tracking slightly */
+.menu-item__label { line-height: 0.98; letter-spacing: -0.015em; }
+.statement p      { line-height: 1.02; letter-spacing: -0.02em; }
+.cta h2           { line-height: 1.04; letter-spacing: -0.02em; }
+
+/* ============================================================
+   COLOUR-FIELD SECTIONS
+   Apply .section--* to any container. Components that read
+   var(--ink) / var(--muted) / var(--accent) recolour automatically.
+   Home page: use sparingly (two beats — cobalt + clay).
+   Inner pages may use more liberally.
+   ============================================================ */
+.section--cobalt {
+  background: var(--cobalt);
+  background-image: url("assets/grain.png");
+  background-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  color: var(--ink);
+  --ink:    var(--cream);
+  --muted:  rgba(236, 231, 221, .6);
+  --line:   rgba(236, 231, 221, .18);
+  /* --accent stays clay (warm on cool is intentional) */
+}
+.section--olive {
+  background: var(--olive);
+  background-image: url("assets/grain.png");
+  background-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  color: var(--ink);
+  --ink:    var(--cream);
+  --muted:  rgba(236, 231, 221, .6);
+  --line:   rgba(236, 231, 221, .18);
+}
+.section--clay,
+.section--clay-cream {
+  background: var(--clay);
+  background-image: url("assets/grain.png");
+  background-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  color: var(--ink);
+  --ink:    #23241D;
+  --muted:  rgba(35, 36, 29, .62);
+  --accent: var(--ink);
+  --accent-strong: rgba(35, 36, 29, .78);
+  --line:   rgba(35, 36, 29, .2);
+}
+
+/* Clay field, cream type. Same background, type flipped light — for large
+   display headers (The Work's dictionary opening) where the page should read
+   as a colour field with light type on it rather than dark ink. Deliberately
+   NOT the default: .btn paints itself in var(--accent) with paper text, so any
+   clay surface carrying a button (the home CTA, the .case-next bands) must
+   keep the dark-ink treatment above or the button goes cream-on-cream. */
+.section--clay-cream {
+  --ink:    var(--cream);
+  --muted:  rgba(236, 231, 221, .8);
+  --accent: var(--ink);
+  --accent-strong: rgba(236, 231, 221, .9);
+  --line:   rgba(236, 231, 221, .28);
+}
+/* a project that names its own colour needs a matching field for the closing
+   bands that point at it — same slug as .project--*, .page-curtain--* and
+   .menu-overlay--*, so the whole family is derivable from the project slug */
+.section--pride-and-prejudice {
+  background: var(--navy-pride-and-prejudice);
+  background-image: url("assets/grain.png");
+  background-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  color: var(--ink);
+  --ink:    var(--cream);
+  --muted:  rgba(236, 231, 221, .6);
+  --line:   rgba(236, 231, 221, .18);
+}
+.section--ink {
+  background: var(--black);
+  background-image: url("assets/grain.png");
+  background-blend-mode: overlay;
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  color: var(--ink);
+  --ink:    var(--cream);
+  --muted:  rgba(236, 231, 221, .55);
+  --line:   rgba(236, 231, 221, .16);
+}
+
+/* ------------------------------------------------------------
+   PER-PROJECT ACCENTS
+   A case study may carry its own accent, echoing the project's
+   own identity rather than the site's default clay. Applied as a
+   class on <body>; every component that reads var(--accent) picks
+   it up, and colour-field sections still override locally (clay
+   sets --accent to ink), so the closing band is untouched.
+   Colours come from each project's own materials — see the note
+   beside each one. Keep new projects to this same pattern.
+   ------------------------------------------------------------ */
+/* THE PROJECT-COLOUR RULE — where a project's own colour is allowed to appear.
+   Three places, the same on every project, so this never has to be decided
+   case by case:
+     1. the headword (.case-hero__title)
+     2. the structural headers (.case-section__eyebrow — Statement, Process,
+        and every sequence heading)
+     3. any link elsewhere on the site that points AT that project (see the
+        closing-band rule further down)
+   The descriptor under the headword stays deliberately quiet: it's a sentence,
+   not a label, and it already sits between two coloured beats. A case study
+   with no project colour (Pride and Prejudice) reads --accent as the site clay
+   and keeps its muted labels. */
+.project .case-hero__title,
+.project .case-section__eyebrow { color: var(--accent); }
+.project .case-hero__tags       { color: var(--muted); }
+
+.project--exemplary-home {
+  --accent:        var(--red-exemplary-home);  /* the red used throughout the project */
+  --accent-strong: #C23A26;
+}
+.project--pride-and-prejudice {
+  --accent:        var(--navy-pride-and-prejudice);  /* the Sofia Opera poster's own navy */
+  --accent-strong: #121B32;
+}
+.project--corps {
+  --accent:        var(--red-corps);  /* the Corps poster's own red (colourway: black + #EE1F25) */
+  --accent-strong: #C8342A;   /* the poster's deeper alternate */
+}
+/* Corps runs on the dark field — the wings, backstage — so it pairs
+   .project--corps with .page--ink below. Its off-white is the poster's own
+   #F5F0E8, drawn from the same source as the red, rather than the site cream:
+   warmer and a shade brighter, and deliberately not pure white. 15.3:1 on the
+   black field, so the long caption reading holds up. */
+.project--corps.page--ink {
+  --ink:   #F5F0E8;
+  --muted: rgba(245, 240, 232, .62);
+  --line:  rgba(245, 240, 232, .16);
+}
+
+
+/* ------------------------------------------------------------
+   PAGE-LEVEL COLOUR FIELD
+   The .section--* fields are bands inside a paper page; .page--ink
+   makes the whole page the dark field instead. Applied to <body>.
+   Sections inside still declare their own field and win locally —
+   Corps' .case-next band stays clay, and the footer's .section--ink
+   simply matches, so it reads as one continuous field.
+   ------------------------------------------------------------ */
+.page--ink {
+  background-color: var(--black);
+  --ink:   var(--cream);
+  --muted: rgba(236, 231, 221, .62);
+  --line:  rgba(236, 231, 221, .16);
+}
+/* placeholders invert — the default hatch is dark-on-light and would vanish
+   here. Same treatment .menu-media .ph already uses on the menu curtain. */
+.page--ink .ph {
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.022) 0 14px, rgba(255,255,255,.05) 14px 28px);
+  border-color: rgba(236, 231, 221, .14);
+}
+/* the global ::selection pairs --ink with --paper, which on a dark page is
+   off-white on off-white */
+.page--ink ::selection { background: var(--ink); color: var(--black); }
+
+
+/* marquee */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding-block: clamp(14px, 2vw, 20px);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.marquee__track {
+  display: flex;
+  white-space: nowrap;
+  will-change: transform;
+}
+.marquee__item {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+/* CSS animation runs by default — scroll.js adds .marquee--js when it takes over */
+@keyframes marquee-tick {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.3334%); }
+}
+.marquee__track { animation: marquee-tick 40s linear infinite; }
+/* Only kill CSS anim once JS rAF is actually driving the track */
+.marquee--js .marquee__track { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track { animation: none !important; }
+}
+
+/* CTA */
+.cta { display: flex; flex-direction: column; gap: clamp(26px, 4vw, 44px); align-items: flex-start; }
+.cta h2 { font-size: var(--fs-h1); line-height: 1.04; letter-spacing: -0.02em; max-width: 18ch; font-weight: 500; }
+.btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 16px 26px; border-radius: 999px; border: 0; /* only ever applied to <a> before
+    the contact form's <button>, which carries a native UA border unless reset */
+  background: var(--accent); color: var(--paper);
+  font-size: 0.98rem; letter-spacing: 0.01em;
+  font-family: inherit; cursor: pointer; /* <button> doesn't inherit these like <a> does */
+  transition: transform .35s cubic-bezier(.16,1,.3,1), background .35s;
+}
+.btn:hover { transform: translateY(-2px); background: var(--accent-strong); }
+.btn .arr { transition: transform .35s cubic-bezier(.16,1,.3,1); }
+.btn:hover .arr { transform: translateX(4px); }
+
+/* footer — uses section--ink class in HTML for dark background */
+.footer { padding-block: clamp(40px, 6vw, 70px); border-top: 1px solid var(--line); color: var(--ink); }
+.footer__top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+.footer__mark {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(2rem, 7vw, 5rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1;
+}
+.footer__links { display: flex; gap: 22px; flex-wrap: wrap; }
+.footer__links a { color: var(--muted); transition: color .25s; }
+.footer__links a:hover { color: var(--accent); }
+.footer__legal { margin-top: clamp(28px, 4vw, 48px); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* ---------- placeholder image block (until real photos) ---------- */
+.ph {
+  position: relative;
+  width: 100%;
+  background:
+    repeating-linear-gradient(45deg, rgba(35,36,29,.025) 0 14px, rgba(35,36,29,.05) 14px 28px);
+  border: 1px solid var(--line);
+  display: flex; align-items: flex-end;
+  color: var(--muted);
+  overflow: hidden;
+}
+.ph::after {
+  content: attr(data-ph);
+  font-size: var(--fs-label); letter-spacing: var(--ls-label); text-transform: uppercase;
+  padding: 14px 16px;
+}
+.ph--portrait { aspect-ratio: 4 / 5; }
+.ph--land { aspect-ratio: 3 / 2; }
+.ph--wide { aspect-ratio: 16 / 9; }
+.ph--tall { aspect-ratio: 3 / 4; }
+
+/* real photography — height-capped, never cropped. Real portfolio photos display at
+   native aspect ratio, sized down only if they'd exceed --img-max-h; portraits get
+   whitespace either side rather than overflowing the viewport. Never object-fit: cover
+   here. (The menu panels used to be the one exception; they aren't any more. The only
+   object-fit: cover left on the site is .disc__img — the home page's discipline tiles,
+   which are UI tiles with type over them, not photographs presented as work.) */
+.work-item__media img,
+.case-media img,
+.case-gallery img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--img-max-h);
+  margin-inline: auto;
+}
+/* .parallax-frame needed no separate cap here: it auto-shrinks to the now
+   height-limited image, and the scale(1.10) parallax always has room since the
+   frame is exactly the size of the (already capped) image it wraps. */
+
+/* ============================================================
+   FULL-SCREEN MENU OVERLAY
+   ============================================================ */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;           /* below nav (z-50), above page content */
+  pointer-events: none;
+}
+.menu-overlay.is-open { pointer-events: auto; }
+
+/* curtain — full-bleed panel that wipes in from the top */
+.menu-overlay__curtain {
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  transform: translateY(-100%);
+  transition: transform var(--dur-menu) var(--ease-menu), background 300ms var(--ease-out);
+  will-change: transform;
+}
+.menu-overlay.is-open .menu-overlay__curtain { transform: translateY(0); }
+.menu-overlay.is-closing .menu-overlay__curtain { transform: translateY(-100%); }
+
+/* destination-colour hover: overlay background shifts to that section's field colour */
+.menu-overlay--work    .menu-overlay__curtain { background: var(--clay); }
+.menu-overlay--about   .menu-overlay__curtain { background: var(--olive); }
+.menu-overlay--contact .menu-overlay__curtain { background: var(--cobalt); }
+/* project destinations may name their own field (see PAGE_CATEGORY in
+   transition.js). 'ink' deliberately has no rule — the curtain's default
+   black already is that field, which is why Corps needs none. */
+.menu-overlay--exemplary-home .menu-overlay__curtain { background: var(--red-exemplary-home); }
+.menu-overlay--pride-and-prejudice .menu-overlay__curtain { background: var(--navy-pride-and-prejudice); }
+
+/* inner layout: links left, image right */
+.menu-overlay__inner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  /* Proportional split rather than a fixed image column: the rules under the
+     menu items land a little past the midpoint at every width, and the panel
+     takes the rest. A clamp()ed second column drifted — it capped out on wide
+     screens and handed the extra width back to the type, which left the lines
+     running to ~63% and the photograph smaller than it should be. */
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(40px, 5vw, 90px);
+  padding: clamp(90px, 12vw, 140px) var(--gut) clamp(50px, 8vw, 90px);
+  color: var(--cream);
+  align-items: start;
+}
+
+/* nav column */
+.menu-overlay__nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* main link list */
+.menu-overlay__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* each item — border fades out with items on close */
+.menu-item {
+  border-top: 1px solid rgba(236, 231, 221, 0.12);
+  transition: opacity 150ms linear; /* JS adds opacity:0 on close */
+}
+.menu-overlay__list .menu-item:last-child { border-bottom: 1px solid rgba(236, 231, 221, 0.12); }
+
+/* entrance state — short rise (no overshoot), weighted in-out easing */
+.menu-item__inner {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 540ms var(--ease-menu), transform 540ms var(--ease-menu);
+  will-change: transform, opacity;
+}
+.menu-item__inner.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* the link itself */
+.menu-item__link {
+  display: flex;
+  align-items: baseline;
+  gap: var(--menu-item-gap);
+  padding: clamp(16px, 2vw, 28px) 0;
+  color: var(--cream);
+  text-decoration: none;
+  transition: opacity var(--dur-std) var(--ease-out);
+}
+.menu-item__idx {
+  width: var(--menu-idx-w); /* fixed, not intrinsic — .menu-item__children's
+    indent below adds up to exactly this + the gap, so it can't drift */
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: rgba(236, 231, 221, 0.35);
+  flex-shrink: 0;
+  transition: color var(--dur-std) var(--ease-out);
+}
+.menu-item__label {
+  font-size: clamp(2.6rem, 7.5vw, 9rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  display: block;
+  transition: transform var(--dur-std) var(--ease-out);
+}
+.menu-item__count {
+  font-family: Inter, sans-serif; /* utility numeral, not display type */
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(236, 231, 221, 0.4);
+  margin-left: clamp(6px, 1vw, 12px);
+  vertical-align: super;
+}
+
+/* hover feedback: siblings dim, active item shifts.
+   Keyed on .menu-item:hover (the <li>) rather than the exact link hovered —
+   :hover naturally applies to an ancestor whenever a descendant is hovered,
+   so "The Work" stays at full opacity while hovering any of its children,
+   with no extra JS/class bookkeeping. */
+.menu-overlay__list:has(.menu-item:hover) .menu-item:not(:hover) .menu-item__link,
+.menu-overlay__list:has(.menu-item:hover) .menu-item:not(:hover) .menu-item__child-link {
+  opacity: 0.2;
+}
+.menu-item__link:hover .menu-item__label { transform: translateX(clamp(10px, 1.5vw, 22px)); }
+.menu-item__link:hover .menu-item__idx { color: rgba(236, 231, 221, 0.7); }
+
+/* nested project links under "The Work" — always visible once the overlay is
+   open, no toggle/expand. Comma-separated run (Oviedo's "Projects (10)" pattern),
+   not a stacked list. Gambarino at a reduced size — editorial, still clearly
+   secondary to the big label — with the same quiet underline/opacity hover
+   used for links elsewhere on the site (09-motion-and-interaction.md §4). */
+.menu-item__children {
+  display: block; /* wraps like a paragraph across the available width */
+  list-style: none;
+  margin: 2px 0 clamp(16px, 2.4vw, 24px);
+  /* idx width + link gap (same custom properties .menu-item__link and
+     .menu-item__idx use, so it never drifts out of alignment), plus a
+     touch extra so it reads as tucked in under the label, not flush edge */
+  padding-left: calc(var(--menu-idx-w) + var(--menu-item-gap) + 10px);
+}
+.menu-item__children li { display: inline; }
+.menu-item__children li:not(:last-child)::after {
+  content: ", ";
+  color: rgba(236, 231, 221, 0.4);
+}
+.menu-item__child-link {
+  font-family: var(--font-display); /* Gambarino, unchanged */
+  font-weight: 400;
+  font-size: 1.1rem;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: rgba(236, 231, 221, 0.5);
+  text-decoration: none;
+  transition: color var(--dur-std) var(--ease-out);
+}
+.menu-item__child-link:hover {
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+.menu-item__child-link.is-current {
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+/* external links — bottom of nav column */
+.menu-overlay__ext {
+  display: flex;
+  gap: 28px;
+  padding-top: clamp(24px, 4vw, 44px);
+
+  /* entrance */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--dur-std) var(--ease-out), transform var(--dur-std) var(--ease-out);
+}
+.menu-overlay__ext.is-in { opacity: 1; transform: none; }
+.menu-overlay__ext a {
+  color: rgba(236, 231, 221, 0.4);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  transition: color var(--dur-micro) var(--ease-out);
+}
+.menu-overlay__ext a:hover { color: var(--cream); }
+
+/* image area — right column */
+.menu-overlay__media {
+  position: relative;
+  width: 100%;
+  /* stop the panel becoming a hero on very wide screens; it stays against the
+     right gutter as the column outgrows it */
+  max-width: 620px;
+  margin-left: auto;
+  /* Square, not 3:4 — the panel images aren't cropped (see .menu-media img
+     below), so the frame's job is to hold every shape without the column
+     resizing on hover. The covers run 0.8 (portrait) to 1.25 (landscape);
+     a square box is the shape that wastes least at both ends of that range. */
+  aspect-ratio: 1 / 1;
+  align-self: center;
+}
+.menu-media {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity var(--dur-std) var(--ease-out), transform var(--dur-std) var(--ease-out);
+  will-change: opacity, transform;
+}
+.menu-media.is-visible { opacity: 1; transform: scale(1); }
+.menu-media .ph {
+  width: 100%;
+  height: 100%;
+  border-color: rgba(255,255,255,0.1);
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 10px, rgba(255,255,255,.04) 10px 20px);
+  aspect-ratio: unset;
+}
+.menu-media .ph::after { color: rgba(255,255,255,0.25); }
+/* Real photos in the menu panel. `contain`, not `cover`: the photograph keeps
+   its own shape and sits centred on the field, whatever aspect it was shot at.
+   This was the one place a portfolio photograph got cropped; it no longer is, so
+   the "never cropped" rule below now covers every photograph shown as work. */
+.menu-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* reduced motion: no transforms, instant show, simple opacity hover */
+@media (prefers-reduced-motion: reduce) {
+  .menu-overlay__curtain { transition: none; }
+  .menu-item__inner { opacity: 1; transform: none; transition: none; }
+  .menu-overlay__ext { opacity: 1; transform: none; transition: none; }
+  .menu-item__label { transition: none; }
+  .menu-item__link { transition: opacity var(--dur-micro) linear; }
+  .menu-media { transition: none; }
+}
+
+/* ============================================================
+   PAGE TRANSITION CURTAIN
+   The same panel the menu overlay wipes in, reused between pages:
+   translateY wipe over --dur-menu with --ease-menu, in the
+   DESTINATION's field colour — the same data-category mapping
+   .menu-overlay--work/about/contact already uses on hover.
+   Deliberately flat (no grain): on a menu click the menu's own
+   curtain hands straight over to this one, and that one is flat —
+   a texture change would show the seam. See transition.js.
+   ============================================================ */
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;            /* above lightbox (60), nav (50), menu overlay (40) */
+  background: var(--black);
+  transform: translateY(-100%);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* covering — painted by the <head> snippet's data-pt-enter before the first
+   paint of an incoming page, then handed over to .is-covering by transition.js */
+:root[data-pt-enter] .page-curtain,
+.page-curtain.is-covering { transform: translateY(0); }
+
+/* destination colour — the three menu-overlay fields, plus home's black hero
+   field (which is also this curtain's default, stated here for symmetry) */
+:root[data-pt-enter="home"]    .page-curtain,
+.page-curtain--home    { background: var(--black); }
+:root[data-pt-enter="ink"]     .page-curtain,
+.page-curtain--ink     { background: var(--black); }
+/* a project whose identity colour IS its field — the curtain and the browser
+   chrome carry the project's own red rather than the generic Work clay */
+:root[data-pt-enter="exemplary-home"] .page-curtain,
+.page-curtain--exemplary-home { background: var(--red-exemplary-home); }
+:root[data-pt-enter="pride-and-prejudice"] .page-curtain,
+.page-curtain--pride-and-prejudice { background: var(--navy-pride-and-prejudice); }
+:root[data-pt-enter="work"]    .page-curtain,
+.page-curtain--work    { background: var(--clay); }
+:root[data-pt-enter="about"]   .page-curtain,
+.page-curtain--about   { background: var(--olive); }
+:root[data-pt-enter="contact"] .page-curtain,
+.page-curtain--contact { background: var(--cobalt); }
+
+/* the transition exists only for the frames we actually animate, so the
+   pre-paint covering state can never animate in from nowhere on load */
+.page-curtain.is-animating { transition: transform var(--dur-menu) var(--ease-menu); }
+
+/* through-sweep entrance variant — see ENTER_DIRECTION in transition.js */
+.page-curtain.is-sweeping { transform: translateY(100%); }
+
+/* exit only: swallow clicks while the curtain covers the outgoing page.
+   Never set on entrance — the incoming page is usable straight away. */
+.page-curtain.is-exiting { pointer-events: auto; }
+
+/* reduced motion: no page transition at all (transition.js never sets the
+   flag or intercepts either — this is the belt to that braces) */
+@media (prefers-reduced-motion: reduce) {
+  .page-curtain { display: none; }
+}
+
+/* ============================================================
+   SECTION COUNTER
+   ============================================================ */
+.section-counter {
+  position: fixed;
+  bottom: clamp(22px, 4vw, 44px);
+  left: var(--gut);
+  z-index: 30;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+  color: #fff;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.js .section-counter { opacity: 1; }
+
+/* ============================================================
+   FEATURED WORK SECTION
+   ============================================================ */
+.work-section__header {
+  padding-bottom: clamp(40px, 6vw, 72px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 22px);
+  border-bottom: 1px solid var(--line);
+}
+.work-item { border-bottom: 1px solid var(--line); }
+.work-item__link {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: start;
+  text-decoration: none;
+  color: inherit;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+  padding-block: clamp(56px, 8vh, 100px);
+}
+.work-item__link--inert { display: grid; grid-template-columns: 1.8fr 1fr; gap: clamp(32px,5vw,64px); align-items: start; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gut); padding-block: clamp(56px,8vh,100px); }
+.work-item__caption {
+  position: sticky;
+  top: clamp(90px, 14vh, 140px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.5vw, 18px);
+}
+.work-item__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3.4rem);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  margin: 0;
+}
+.work-item--placeholder .work-item__link--inert { opacity: 0.4; }
+
+/* ============================================================
+   EXPANDED APPROACH SECTION
+   ============================================================ */
+.approach-lead { margin-bottom: clamp(48px, 7vw, 80px); }
+.approach-grid {
+  display: grid;
+  grid-template-columns: clamp(100px, 16vw, 220px) 1fr;
+  gap: clamp(40px, 7vw, 100px);
+  align-items: start;
+}
+.approach-sticky-col {
+  position: sticky;
+  top: clamp(90px, 14vh, 140px);
+}
+.approach-pillars { display: flex; flex-direction: column; }
+.pillar {
+  padding-block: clamp(32px, 5vw, 56px);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.5vw, 18px);
+}
+.pillar:last-child { border-bottom: 1px solid var(--line); }
+
+/* ============================================================
+   ABOUT TEASER
+   ============================================================ */
+.about-teaser { background: var(--paper); }
+.about-teaser__inner {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+.about-teaser__text { display: flex; flex-direction: column; }
+.about-teaser__more {
+  margin-top: clamp(20px, 3vw, 32px);
+  display: inline-block;
+  color: var(--ink);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.about-teaser__more:hover { opacity: 1; }
+.about-teaser__portrait { width: 100%; height: auto; max-height: var(--img-max-h); }
+
+/* ============================================================
+   CLIENTS & RECOGNITION
+   ============================================================ */
+.clients-inner { max-width: none; }
+.clients-inner > .label { display: block; margin-bottom: clamp(28px, 4vw, 48px); }
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(32px, 6vw, 80px);
+}
+.clients-col__label { display: block; margin-bottom: clamp(10px, 1.6vw, 16px); color: var(--muted); }
+.clients-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.clients-list li {
+  padding: clamp(16px, 2.4vw, 26px) 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.clients-list li span { color: var(--muted); font-size: 0.5em; font-family: 'Inter', sans-serif; letter-spacing: 0; margin-left: 0.4em; }
+.clients-list li:last-child { border-bottom: 1px solid var(--line); }
+@media (max-width: 720px) {
+  .clients-grid { grid-template-columns: 1fr; gap: clamp(24px, 8vw, 40px); }
+}
+
+/* ============================================================
+   INNER PAGES — shared (about, contact)
+   ============================================================ */
+/* first section on pages with no hero — clears the fixed nav */
+.section--first { padding-top: clamp(140px, 20vw, 210px); }
+
+/* about: top statement (colour field) */
+.page-statement p {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h1);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  max-width: 26ch;
+}
+
+/* about: aside paragraph + image (reuses .approach's text+image grid pattern) */
+.about-aside { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 6vw, 90px); align-items: center; }
+
+/* about: single profile — portrait + title + bio */
+.profile { display: grid; grid-template-columns: 1fr 1.6fr; gap: clamp(28px, 6vw, 90px); align-items: center; }
+.profile__text { display: flex; flex-direction: column; gap: clamp(14px, 2vw, 20px); }
+.profile__portrait { width: 100%; height: auto; max-height: var(--img-max-h); }
+.profile__title {
+  font-size: var(--fs-lead);
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+/* ============================================================
+   CONTACT — editorial intro (paper) + form (cobalt)
+   ============================================================ */
+
+/* editorial half: statement, then the email itself as the headline */
+.contact-intro { display: flex; flex-direction: column; align-items: flex-start; }
+.contact-email {
+  display: inline-block;
+  margin-top: clamp(40px, 6vw, 64px);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 5vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.1em;
+  transition: opacity .25s var(--ease-out), border-color .25s var(--ease-out);
+}
+.contact-email:hover { opacity: 0.72; border-color: var(--ink); }
+
+.contact-social {
+  display: flex;
+  gap: clamp(18px, 3vw, 28px);
+  margin-top: clamp(28px, 4vw, 40px);
+}
+.contact-social a {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color .25s var(--ease-out);
+}
+.contact-social a:hover { color: var(--accent); }
+
+/* form half — the one colour beat */
+.contact-form-wrap { max-width: 640px; }
+.contact-form-lead {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-h2);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: clamp(36px, 6vw, 56px);
+}
+
+.contact-form__fields { display: flex; flex-direction: column; gap: clamp(26px, 4vw, 38px); }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field label {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field__optional { text-transform: none; letter-spacing: 0; opacity: 0.75; }
+.field__error {
+  display: block;
+  min-height: 1.2em;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  color: var(--accent);
+}
+.field input,
+.field textarea {
+  font-family: "Inter", sans-serif;
+  font-size: var(--fs-body);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0 10px;
+  resize: vertical;
+  transition: border-color .25s var(--ease-out);
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--muted); }
+.field input:hover,
+.field textarea:hover { border-color: rgba(236, 231, 221, .4); }
+.field textarea { min-height: 6em; }
+
+.contact-form__submit { margin-top: clamp(6px, 1vw, 10px); align-self: flex-start; }
+
+.contact-form__status {
+  margin-top: clamp(20px, 3vw, 32px);
+  font-size: var(--fs-lead);
+  letter-spacing: -0.01em;
+  max-width: 42ch;
+}
+.contact-form__status.is-error { color: var(--accent); }
+
+/* ============================================================
+   CASE STUDY SYSTEM
+   Shared across work.html and individual case-study pages.
+   All blocks reuse existing tokens/reveal system — no new motion,
+   easing, or colour rules. See 10-case-study-system.md.
+   ============================================================ */
+
+/* case-hero: title + tags line */
+.case-hero__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-mega);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+.case-hero__tags { display: block; margin-top: clamp(16px, 2.4vw, 26px); }
+
+/* case-section: generic wrapper, opens with a .label eyebrow */
+.case-section__eyebrow { display: block; margin-bottom: clamp(18px, 2.4vw, 26px); }
+
+/* case-prose reuses .measure / .measure-wide sizing directly — no dedicated rule needed */
+
+/* case-layout: sticky meta rail alongside Method's body copy —
+   same mechanic as .approach-grid / .approach-sticky-col */
+.case-layout {
+  display: grid;
+  grid-template-columns: clamp(100px, 16vw, 220px) 1fr;
+  gap: clamp(40px, 7vw, 100px);
+  align-items: start;
+}
+.case-meta {
+  position: sticky;
+  top: clamp(90px, 14vh, 140px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vw, 30px);
+}
+.case-meta__item { display: flex; flex-direction: column; gap: 6px; }
+.case-meta__value { font-size: var(--fs-body); letter-spacing: -0.01em; }
+
+/* case-blocks: modular Anna-style units — Inter only, not Gambarino */
+.case-blocks { display: flex; flex-direction: column; gap: clamp(28px, 4vw, 48px); }
+.case-block { display: flex; flex-direction: column; gap: 10px; }
+.case-block__title {
+  font-size: var(--fs-lead);
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+/* case-list: itemised outcome/recognition content, styled like .clients-list */
+.case-list { list-style: none; margin: clamp(20px, 3vw, 32px) 0 0; padding: 0; }
+.case-list li {
+  padding: clamp(12px, 1.8vw, 18px) 0;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.case-list li:last-child { border-bottom: 1px solid var(--line); }
+
+/* case-media: single / paired / full-bleed images at native ratios */
+.case-media { margin-block: clamp(40px, 6vw, 72px); }
+.case-media--pair { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 32px); }
+
+/* case-gallery: sequential full-bleed images, no captions — the "media wall" */
+.case-gallery { display: flex; flex-direction: column; gap: clamp(40px, 6vw, 72px); margin-top: clamp(40px, 6vw, 72px); }
+
+/* case-next: closing band, cycles to destination's field colour */
+.case-next__body { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(20px, 3vw, 32px); }
+.case-next__link {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 22px);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-mega);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* THE CLOSING-BAND RULE — a .case-next band is painted as the place it leads
+   to, never as the page it sits on:
+     1. FIELD — the band carries the destination's field class, the same
+        mapping transition.js uses for the curtain and <meta name="theme-color">:
+          Work pages  → .section--clay-cream   (clay field, cream type)
+          Corps       → .section--ink          (the dark field it runs on)
+          About       → .section--olive
+          Contact     → .section--cobalt
+     2. TYPE — the destination's name is set in that project's own colour when
+        the band's field is NOT already that colour (Corps: red name on its
+        black field). Where the field IS the project's colour — Pride and
+        Prejudice's navy — the name takes the field's light type instead, or it
+        would be invisible on itself. Keyed off the href below, so the markup
+        states the destination once (in the link) and the colour cannot drift
+        out of step with it; a project whose field is its own colour simply
+        gets no line here.
+   The same two lines would extend this to work tiles if that's ever wanted. */
+.case-next__link[href="corps.html"]          { color: var(--red-corps); }
+.case-next__link[href="exemplary-home.html"] { color: var(--red-exemplary-home); }
+
+.case-next__link .arr { display: inline-block; transition: transform .35s cubic-bezier(.16,1,.3,1); }
+.case-next__link:hover .arr { transform: translateX(10px); }
+
+/* ============================================================
+   CORPS — image-led project page
+   Reuses the case-study system (.case-hero / .case-meta / .case-section /
+   .case-next) and the site's real-photography sizing rules. Adds only: a
+   reading-width measure, a horizontal (non-sticky) meta rail, and a spanning
+   image grid whose rhythm is set PER IMAGE from corps-data.js (the one file to
+   edit). No new motion — sequence images carry the existing
+   data-reveal / data-reveal-type="image" / data-parallax attributes, wrapped
+   and observed by main.js/scroll.js exactly like every other photograph.
+   ============================================================ */
+
+/* ~60–70ch reading measure — the statement + process prose sit here */
+.measure-read { max-width: 66ch; }
+
+/* hero: live status under the descriptor, in the accent colour */
+.corps-hero__status { display: block; margin-top: clamp(10px, 1.4vw, 16px); color: var(--accent); }
+
+/* metadata: the .case-meta pairs laid out as a horizontal rail (standalone,
+   not the sticky Method-rail variant) */
+.case-meta--grid {
+  position: static;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: clamp(26px, 5vw, 72px);
+}
+
+/* sequence section: small heading + optional caption + image grid */
+.corps-seq__caption {
+  display: block;
+  margin-top: clamp(10px, 1.4vw, 16px);
+  color: var(--muted);
+}
+
+/* spanning image grid — six-column bed; each cell's width comes from its
+   span class (full / half / third), set per image in corps-data.js */
+.corps-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(16px, 2.4vw, 34px);
+  align-items: start;
+  margin-top: clamp(28px, 4vw, 48px);
+}
+.corps-cell { min-width: 0; }            /* let cells shrink inside the grid */
+.corps-cell--full  { grid-column: span 6; }
+.corps-cell--half  { grid-column: span 3; }
+.corps-cell--third { grid-column: span 2; }
+
+/* placeholders fill their cell at the declared aspect ratio, so the empty
+   layout can be judged before real selects arrive */
+.corps-cell > .ph { width: 100%; height: auto; }
+
+/* real photographs: native ratio, height-capped, centred — the same rule
+   .case-media img / .case-gallery img use. Never cropped; a landscape fills
+   the cell, a portrait keeps whitespace either side rather than overflowing. */
+.corps-cell img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--img-max-h);
+  margin-inline: auto;
+}
+
+@media (max-width: 820px) {
+  .corps-cell--third { grid-column: span 3; }  /* 3-up relaxes to 2-up */
+}
+@media (max-width: 560px) {
+  .corps-grid { grid-template-columns: 1fr; gap: clamp(20px, 6vw, 34px); }
+  .corps-cell--full,
+  .corps-cell--half,
+  .corps-cell--third { grid-column: auto; }    /* everything stacks full-width */
+}
+
+/* ============================================================
+   LIGHTBOX — full-screen viewer for .zoomable photographs
+   Built once by main.js and appended to <body>. Reuses the site's easing
+   tokens and the same background-scroll-lock pattern as the menu overlay
+   (window.__lenis?.stop()/.start()). No object-fit: cover here — the whole
+   photograph is always shown, never cropped.
+   ============================================================ */
+.zoomable { cursor: zoom-in; }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60; /* above nav (50) and the menu overlay (40) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox[hidden] { display: none; }
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 27, 21, 0.96);
+  opacity: 0;
+  transition: opacity var(--dur-std) var(--ease-out);
+}
+.lightbox.is-open .lightbox__backdrop { opacity: 1; }
+
+.lightbox__stage {
+  position: relative;
+  max-width: 92vw;
+  max-height: 92vh;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out);
+}
+.lightbox.is-open .lightbox__stage { opacity: 1; transform: scale(1); }
+
+.lightbox__img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+}
+/* .ph placeholders can be marked .zoomable too (see 09-motion-and-interaction.md) —
+   this gives the enlarged view a sensible box before a real photo lands */
+.lightbox__ph {
+  width: min(92vw, 900px);
+  aspect-ratio: 3 / 2;
+}
+
+.lightbox__close,
+.lightbox__prev,
+.lightbox__next {
+  position: fixed;
+  background: none;
+  border: 0;
+  padding: 12px;
+  color: var(--cream);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity var(--dur-micro) var(--ease-out);
+}
+.lightbox__close:hover,
+.lightbox__prev:hover,
+.lightbox__next:hover { opacity: 1; }
+
+.lightbox__close { top: clamp(18px, 2.4vw, 30px); right: var(--gut); }
+.lightbox__prev  { left: var(--gut); top: 50%; transform: translateY(-50%); font-size: 1.4rem; }
+.lightbox__next  { right: var(--gut); top: 50%; transform: translateY(-50%); font-size: 1.4rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox__backdrop,
+  .lightbox__stage { transition: opacity var(--dur-micro) linear; }
+  .lightbox__stage { transform: none !important; }
+}
+@media (max-width: 620px) {
+  .lightbox__close, .lightbox__prev, .lightbox__next { padding: 8px; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 820px) {
+  .split, .archive, .approach { grid-template-columns: 1fr; }
+  .archive { align-items: stretch; }
+  .disc { grid-template-columns: 1fr 1fr; }
+  /* on mobile, always show toggle (no-JS: inline links already stack fine) */
+  .nav__links { display: none; }
+  .nav__toggle { display: inline-flex; }
+  /* hide image column — just links on mobile */
+  .menu-overlay__inner {
+    grid-template-columns: 1fr;
+    padding-top: clamp(100px, 20vw, 140px);
+  }
+  .menu-overlay__media { display: none; }
+  /* no mobile override needed — .menu-item__children's padding-left is
+     calc()-derived from --menu-idx-w + --menu-item-gap (both already resolve
+     correctly at narrow widths), so it stays flush with the label here too */
+
+  /* work items */
+  .work-item__link,
+  .work-item__link--inert { grid-template-columns: 1fr; }
+  .work-item__caption { position: static; }
+
+  /* approach */
+  .approach-grid { grid-template-columns: 1fr; }
+  .approach-sticky-col { position: static; margin-bottom: clamp(20px, 3vw, 32px); }
+
+  /* about teaser */
+  .about-teaser__inner { grid-template-columns: 1fr; }
+
+  /* about: aside + profile */
+  .about-aside, .profile { grid-template-columns: 1fr; }
+
+  /* case study: sticky meta rail + paired media */
+  .case-layout { grid-template-columns: 1fr; }
+  .case-meta { position: static; margin-bottom: clamp(20px, 3vw, 32px); }
+  .case-media--pair { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .disc { grid-template-columns: 1fr; }
+  /* single column makes every tile wide and short, which starves the contained
+     Brand Identity lockup — the photographs crop happily, a mark can't. */
+  .disc__item--mark { min-height: clamp(215px, 58vw, 290px); }
+  .hero__foot { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
+
+/* ==== THE WORK — dictionary-entry header (from design export) ==== */
+/* ============================================================
+   THE WORK — dictionary-entry opening section
+   Headword treated like a dictionary entry (word / IPA / part of
+   speech / numbered senses / example sentence), on a colour field.
+   Senses rotate one at a time; click a number to pin it. Quote
+   reveals with a typewriter caret. All decorative — content is
+   real markup underneath, so it degrades cleanly with JS/motion off.
+   ============================================================ */
+.work-dict__word {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-mega);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.work-dict__meta {
+  margin-top: 22px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.work-dict__ipa { font-size: 1.2rem; opacity: 0.85; }
+
+.work-dict__pos { font-size: 1.05rem; font-style: italic; opacity: 0.7; }
+
+.work-dict__senses {
+  margin-top: clamp(40px, 6vw, 56px);
+  display: flex;
+  gap: 26px;
+  align-items: flex-start;
+  max-width: 680px;
+}
+
+.work-dict__dial {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 3px;
+}
+
+.work-dict__num {
+  font-family: inherit;
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.32;
+  animation: dialNum 18s steps(1, end) infinite backwards;
+}
+
+.work-dict__num:nth-child(1) { animation-delay: 0s; }
+
+.work-dict__num:nth-child(2) { animation-delay: 6s; }
+
+.work-dict__num:nth-child(3) { animation-delay: 12s; }
+
+.work-dict__num:hover,
+.work-dict__num:focus-visible { opacity: 1; }
+
+.work-dict__num.is-active  { opacity: 1; animation: none; }
+
+.work-dict__num.is-dimmed  { opacity: 0.32; animation: none; }
+
+.work-dict__stack { position: relative; height: 5.5em; flex: 1; }
+
+.work-dict__sense {
+  position: absolute;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  animation: senseCycle 18s cubic-bezier(.4, 0, .2, 1) infinite backwards;
+}
+
+.work-dict__sense:nth-child(1) { animation-delay: 0s; }
+
+.work-dict__sense:nth-child(2) { animation-delay: 6s; }
+
+.work-dict__sense:nth-child(3) { animation-delay: 12s; }
+
+.work-dict__sense.is-active { animation: none; opacity: 1; transform: none; }
+
+.work-dict__sense.is-dimmed { animation: none; opacity: 0; transform: none; }
+
+.work-dict__quote {
+  margin-top: 44px;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+.work-dict__quote-type {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid transparent;
+  padding-right: 4px;
+  animation: typeCaret 11s steps(64, end) infinite;
+  --lw: 76ch;
+  --caret: var(--ink);
+}
+
+/* safety-net fallback — see the matching note in main.js */
+.work-dict__quote-type.is-static {
+  animation: none;
+  width: auto;
+  border-right: 0;
+  overflow: visible;
+  white-space: normal;
+}
+
+@keyframes typeCaret {
+  0%     { width: 0; border-color: transparent; }
+  2%     { border-color: var(--caret, #AE674C); }
+  30%    { width: var(--lw); border-color: var(--caret, #AE674C); }
+  39.9%  { border-color: var(--caret, #AE674C); }
+  40%    { border-color: transparent; }
+  45.9%  { border-color: transparent; }
+  46%    { border-color: var(--caret, #AE674C); }
+  51.9%  { border-color: var(--caret, #AE674C); }
+  52%    { border-color: transparent; }
+  57.9%  { border-color: transparent; }
+  58%    { border-color: var(--caret, #AE674C); }
+  64%    { border-color: transparent; }
+  100%   { width: var(--lw); border-color: transparent; }
+}
+
+@keyframes senseCycle {
+  0%    { opacity: 0; transform: translateY(10px); }
+  4%    { opacity: 1; transform: translateY(0); }
+  29%   { opacity: 1; transform: translateY(0); }
+  33%   { opacity: 0; transform: translateY(-10px); }
+  100%  { opacity: 0; }
+}
+
+@keyframes dialNum {
+  0%      { opacity: 1; }
+  33.33%  { opacity: 1; }
+  33.34%  { opacity: 0.32; }
+  100%    { opacity: 0.32; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-dict__num,
+    .work-dict__sense,
+    .work-dict__quote-type { animation: none !important; }
+  .work-dict__stack {
+      position: static;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  .work-dict__sense { position: static; opacity: 1; transform: none; }
+  .work-dict__quote-type {
+      width: auto;
+      border-right: 0;
+      overflow: visible;
+      white-space: normal;
+    }
+  .work-dict__dial { display: none; }
+}
+
+@media (max-width: 720px) {
+  .work-dict__senses { flex-direction: column; gap: 14px; }
+  .work-dict__dial { flex-direction: row; gap: 16px; }
+}
+
+/* scroll hint — bottom-right of the opening section, same quiet language as
+   the home page hero's "Scroll" (.hero__foot .hero__scroll), but positioned
+   relative to this section rather than a fixed-height hero */
+.work-dict__scroll {
+  position: absolute;
+  right: var(--gut);
+  bottom: clamp(28px, 4vw, 48px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  opacity: 0.7;
+}
+.work-dict__scroll-label {
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+}
+@media (max-width: 520px) {
+  .work-dict__scroll { bottom: clamp(20px, 5vw, 32px); }
+}
