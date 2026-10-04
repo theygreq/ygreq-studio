@@ -244,8 +244,14 @@ function markRevealed(el) {
     const inner = el.querySelector('.reveal-inner');
     if (inner) { inner.style.transition = 'none'; inner.style.transform = 'translateY(0)'; }
   } else if (type === 'image') {
+    // Covers both treatments: the clip wipe on pointer devices and the
+    // opacity/transform rise used on touch (see the coarse-pointer block in
+    // styles.css). Clearing only the clip-path would leave a touch device's
+    // photograph stuck at opacity 0.
     el.style.transition = 'none';
     el.style.clipPath = 'inset(0 0 0% 0)';
+    el.style.opacity = '1';
+    el.style.transform = 'none';
   } else {
     el.style.transition = 'none';
     el.style.opacity = '1';

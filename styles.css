@@ -168,6 +168,28 @@ h1, h2, h3, p { margin: 0; }
    the devices least able to spare it. */
 @media (hover: none) and (pointer: coarse) {
   .js .parallax-frame > * { will-change: auto; }
+
+  /* The clip-path wipe is the remaining source of dropped frames on mobile.
+     clip-path is not a compositor-animatable property in any current browser,
+     so each of the ~60 frames repaints the whole photograph — a full-width
+     2000px image on a phone GPU. will-change can't promote it either, since
+     there is no layer the compositor could animate on its own.
+     Opacity and transform ARE composited, so on touch the photographs rise
+     and fade in instead of wiping down: the same beat, a shorter duration to
+     suit the smaller screen, and no repainting. Pointer devices keep the
+     wipe, where the repaint cost is affordable and the gesture reads better
+     against parallax. */
+  .js [data-reveal-type="image"] {
+    clip-path: none;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+    will-change: opacity, transform;
+  }
+  .js [data-reveal-type="image"].is-in {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -651,10 +673,17 @@ section { position: relative; }
 /* footer — uses section--ink class in HTML for dark background */
 .footer { padding-block: clamp(40px, 6vw, 70px); border-top: 1px solid var(--line); color: var(--ink); }
 .footer__top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+/* The wordmark is the link home — the conventional place to expect one, and
+   the footer's only other route back. inline-block keeps the hit area to the
+   text itself rather than the full flex row. */
 .footer__mark {
+  display: inline-block;
   font-family: "DM Sans", sans-serif;
   font-size: clamp(2rem, 7vw, 5rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1;
+  transition: opacity .3s var(--ease-out);
 }
+.footer__mark:hover,
+.footer__mark:focus-visible { opacity: 0.68; }
 .footer__links { display: flex; gap: 22px; flex-wrap: wrap; }
 .footer__links a { color: var(--muted); transition: color .25s; }
 .footer__links a:hover { color: var(--accent); }
