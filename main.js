@@ -290,12 +290,23 @@ if ('IntersectionObserver' in window && reveals.length) {
   // scroll position changes regardless of that throttling, so use it as a
   // parallel, low-cost sweep (rAF-based throttling is avoided here since
   // rAF is exactly the kind of callback that gets paused in this scenario).
+  // Once every reveal has fired there is nothing left for the sweep to do,
+  // and revealIfVisible() measures elements (forced layout) on every tick —
+  // so detach the listener rather than paying that cost for the rest of the
+  // page's life. This is a meaningful share of the scroll-time work on the
+  // image-heavy pages.
   let scrollSweepPending = false;
-  window.addEventListener('scroll', () => {
+  const allRevealed = () => [...reveals].every((el) => el.classList.contains('is-in'));
+  const onScrollSweep = () => {
     if (scrollSweepPending) return;
     scrollSweepPending = true;
-    setTimeout(() => { scrollSweepPending = false; revealIfVisible(); }, 80);
-  }, { passive: true });
+    setTimeout(() => {
+      scrollSweepPending = false;
+      revealIfVisible();
+      if (allRevealed()) window.removeEventListener('scroll', onScrollSweep);
+    }, 80);
+  };
+  window.addEventListener('scroll', onScrollSweep, { passive: true });
 } else {
   reveals.forEach((el) => markRevealed(el));
 }
@@ -572,3 +583,51 @@ if ('IntersectionObserver' in window && reveals.length) {
     }, { threshold: 0.4 }).observe(v);
   });
 }());
+
+
+// ============================================================
+//  NAV OVER A COLOUR FIELD
+//  .nav uses mix-blend-mode: difference so it stays legible over arbitrary
+//  imagery, but white differenced against clay resolves to a dull blue-grey.
+//  Watch which colour field (if any) sits under the nav band and let the CSS
+//  paint the nav ecru there instead. The observer root is cropped to the
+//  height of the nav itself, so this tracks what is actually behind it
+//  rather than what is merely on screen — and it is event-driven, so it
+//  costs nothing per frame while scrolling.
+// ============================================================
+(function () {
+  const nav = document.querySelector('.nav');
+  if (!nav || !('IntersectionObserver' in window)) return;
+
+  const fields = document.querySelectorAll(
+    '.section--clay, .section--clay-cream, .section--cobalt, .section--olive,' +
+    '.section--ink, .section--pride-and-prejudice'
+  );
+  if (!fields.length) return;
+
+  const under = new Set();
+  let io = null;
+
+  function build() {
+    if (io) io.disconnect();
+    under.clear();
+    const band   = nav.offsetHeight || 64;
+    const bottom = Math.max(0, Math.round(window.innerHeight - band));
+    io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) under.add(e.target);
+        else under.delete(e.target);
+      });
+      nav.classList.toggle('nav--field', under.size > 0);
+    }, { rootMargin: `0px 0px -${bottom}px 0px`, threshold: 0 });
+    fields.forEach((f) => io.observe(f));
+  }
+
+  build();
+
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(build, 200);
+  }, { passive: true });
+})();

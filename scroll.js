@@ -1,8 +1,19 @@
 // YGREQ.STUDIO — scroll engine (ES module)
-// Natural Lenis smooth scroll + gentle section assist + parallax, hero exit, marquee.
-// Disabled entirely for prefers-reduced-motion.
-
-import Lenis from 'https://esm.sh/lenis';
+// Lenis smooth scroll + gentle section assist + parallax, hero exit, marquee.
+//
+// Two profiles:
+//   full  — pointer devices. Everything below, driven by one rAF loop.
+//   lite  — touch devices and prefers-reduced-motion. Native scrolling, no
+//           Lenis (not even downloaded), no parallax, no hero zoom, and the
+//           marquee left to its CSS animation.
+//
+// Why lite exists: on a phone the scroll itself is already smooth and
+// compositor-driven, while this file's per-frame work — a getBoundingClientRect
+// per section and per parallax image, every frame — forces a synchronous
+// layout on the main thread on each of those frames. Running that against
+// native momentum scrolling is what made the whole site stutter on mobile.
+// Parallax also reads as jitter rather than depth at phone size, so there is
+// nothing to miss. Pointer devices are unchanged.
 
 // ============================================================
 //  TUNING
@@ -19,16 +30,16 @@ const ASSIST_DURATION  = 0.4;  // s easing duration (always short travel)
 const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
 // ============================================================
 
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const coarse  = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+const lite    = reduced || coarse;
+
 // ---- Section counter -------------------------------------------
-// Runs unconditionally (not nested inside the Lenis branch below), so it
-// works identically under prefers-reduced-motion (where Lenis never
-// initialises). initSectionCounter() returns an update function used two
-// ways below: driven every frame by Lenis's own rAF loop when Lenis is
-// active (the same loop that already reliably drives parallax/hero-exit —
-// this avoids relying on native 'scroll' event timing, which Lenis
-// deliberately suppresses on itself during smooth-wheel animation via an
-// internal _preventNextNativeScrollEvent flag), and by a plain native
-// 'scroll' listener as the fallback when Lenis is disabled.
+// Section tops are measured once and cached, rather than re-read from the
+// layout on every call: the old version ran a getBoundingClientRect over
+// every section on every frame, which is a forced layout per section per
+// frame. Re-measured on resize, after load (images settle late and move
+// everything below them) and on any body resize.
 function initSectionCounter() {
   const allSections    = [...document.querySelectorAll('section')];
   const counterCurrent = document.getElementById('counterCurrent');
@@ -37,30 +48,43 @@ function initSectionCounter() {
 
   counterTotal.textContent = String(allSections.length).padStart(2, '0');
 
-  function updateCounter() {
-    const scrollY = window.scrollY;
-    const vh = window.innerHeight;
-    let cur = 0;
-    allSections.forEach((s, i) => {
-      const top = s.getBoundingClientRect().top + scrollY;
-      if (top <= scrollY + vh * 0.5) cur = i;
-    });
-    const next = String(cur + 1).padStart(2, '0');
-    if (counterCurrent.textContent !== next) counterCurrent.textContent = next;
+  let tops = [];
+  function measure() {
+    const y = window.scrollY;
+    tops = allSections.map(s => s.getBoundingClientRect().top + y);
+    lastY = -1;            // force the next update to re-evaluate
   }
 
-  updateCounter();
+  let lastY = -1, lastIdx = -1;
+  function updateCounter() {
+    const scrollY = window.scrollY;
+    if (scrollY === lastY) return;   // nothing moved — skip the whole pass
+    lastY = scrollY;
+    const mid = scrollY + window.innerHeight * 0.5;
+    let cur = 0;
+    for (let i = 0; i < tops.length; i++) if (tops[i] <= mid) cur = i;
+    if (cur === lastIdx) return;     // same section — skip the DOM write
+    lastIdx = cur;
+    counterCurrent.textContent = String(cur + 1).padStart(2, '0');
+  }
+
+  measure();
+  let measureTimer = null;
+  const remeasure = () => { clearTimeout(measureTimer); measureTimer = setTimeout(measure, 150); };
+  window.addEventListener('resize', remeasure, { passive: true });
+  window.addEventListener('load', () => setTimeout(measure, 300));
+  if ('ResizeObserver' in window) new ResizeObserver(remeasure).observe(document.body);
+
   return updateCounter;
 }
 const updateSectionCounter = initSectionCounter();
 
-// Belt-and-suspenders: always attach a plain native 'scroll' listener too
-// (rAF-throttled), not just the Lenis-raf hook added below when Lenis is
-// active. Native 'scroll' fires on window regardless of Lenis's internal
-// bookkeeping, so this path still works even in a context where Lenis's
-// own rAF loop is stalled (e.g. a backgrounded/hidden tab throttling
-// requestAnimationFrame) as long as the browser is dispatching scroll
-// events at all. Harmless overlap with the raf-loop hook when both fire.
+// Native 'scroll' drives the counter in lite mode, and also as a safety net
+// in full mode: Lenis suppresses some native scroll events on itself during
+// smooth-wheel animation, but the rAF loop covers that case, and this covers
+// the reverse (a stalled rAF loop in a throttled tab). updateCounter() now
+// early-exits when the scroll position has not changed, so the overlap is
+// genuinely free.
 if (updateSectionCounter) {
   let counterTicking = false;
   window.addEventListener('scroll', () => {
@@ -70,13 +94,17 @@ if (updateSectionCounter) {
   }, { passive: true });
 }
 
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-if (reduced) {
+if (lite) {
+  // No Lenis instance, and the module is never even fetched. Anything that
+  // calls window.__lenis?.stop() / .start() (the menu overlay's scroll lock)
+  // no-ops safely against null.
   window.__lenis = null;
 } else {
 
   // ---- Lenis init ------------------------------------------------
+  // Dynamic import so touch devices never pay for the download.
+  const { default: Lenis } = await import('https://esm.sh/lenis');
+
   const lenis = new Lenis({
     lerp:        LENIS_LERP,
     smoothWheel: true,
@@ -145,11 +173,19 @@ if (reduced) {
   }
 
   // ---- Main rAF loop ---------------------------------------------
+  // Parallax and the hero zoom only depend on scroll position, so they are
+  // skipped on frames where it has not changed — which is most frames once
+  // the page comes to rest. Lenis still ticks every frame; it needs to.
+  let lastScroll = -1;
   function raf(time) {
     lenis.raf(time);
-    updateParallax();
-    updateHeroExit();
-    if (updateSectionCounter) updateSectionCounter();
+    const y = lenis.scroll;
+    if (y !== lastScroll) {
+      lastScroll = y;
+      updateParallax();
+      updateHeroExit(y);
+      if (updateSectionCounter) updateSectionCounter();
+    }
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
@@ -166,9 +202,8 @@ if (reduced) {
     });
   }
 
-  function updateHeroExit() {
+  function updateHeroExit(scrollY) {
     if (!heroMedia || !heroSection) return;
-    const scrollY = lenis.scroll;
     if (scrollY > heroSection.offsetHeight) return;
     const progress = scrollY / heroSection.offsetHeight;
     heroMedia.style.transform = `scale(${1 + progress * 0.05})`;
