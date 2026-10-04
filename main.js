@@ -589,45 +589,65 @@ if ('IntersectionObserver' in window && reveals.length) {
 //  NAV OVER A COLOUR FIELD
 //  .nav uses mix-blend-mode: difference so it stays legible over arbitrary
 //  imagery, but white differenced against clay resolves to a dull blue-grey.
-//  Watch which colour field (if any) sits under the nav band and let the CSS
-//  paint the nav ecru there instead. The observer root is cropped to the
-//  height of the nav itself, so this tracks what is actually behind it
-//  rather than what is merely on screen — and it is event-driven, so it
-//  costs nothing per frame while scrolling.
+//  Work out which colour field (if any) sits under the nav band and let the
+//  CSS paint the nav ecru there instead.
+//
+//  Deliberately NOT an IntersectionObserver: several contexts this site has
+//  to survive never deliver IO callbacks at all (see the reveal safety nets
+//  above — same problem, same reason). A scroll listener fires from real
+//  scroll position changes regardless. The cost is a loop over a handful of
+//  cached numbers per rAF-throttled scroll tick, with no layout reads in the
+//  hot path — field positions and the nav height are measured once and
+//  re-measured only on resize, on load, and when the body resizes.
 // ============================================================
 (function () {
   const nav = document.querySelector('.nav');
-  if (!nav || !('IntersectionObserver' in window)) return;
+  if (!nav) return;
 
-  const fields = document.querySelectorAll(
-    '.section--clay, .section--clay-cream, .section--cobalt, .section--olive,' +
+  const fields = [...document.querySelectorAll(
+    '.section--clay, .section--clay-cream, .section--cobalt, .section--olive, ' +
     '.section--ink, .section--pride-and-prejudice'
-  );
+  )];
   if (!fields.length) return;
 
-  const under = new Set();
-  let io = null;
+  let spans = [];      // [topY, bottomY] of each field, in document coordinates
+  let navH  = 64;
+  let last  = null;
 
-  function build() {
-    if (io) io.disconnect();
-    under.clear();
-    const band   = nav.offsetHeight || 64;
-    const bottom = Math.max(0, Math.round(window.innerHeight - band));
-    io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) under.add(e.target);
-        else under.delete(e.target);
-      });
-      nav.classList.toggle('nav--field', under.size > 0);
-    }, { rootMargin: `0px 0px -${bottom}px 0px`, threshold: 0 });
-    fields.forEach((f) => io.observe(f));
+  function measure() {
+    const y = window.scrollY;
+    navH  = nav.offsetHeight || 64;
+    spans = fields.map((f) => {
+      const r = f.getBoundingClientRect();
+      return [r.top + y, r.bottom + y];
+    });
+    update(true);
   }
 
-  build();
+  function update(force) {
+    const top    = window.scrollY;
+    const bottom = top + navH;
+    let on = false;
+    for (let i = 0; i < spans.length; i++) {
+      if (spans[i][0] < bottom && spans[i][1] > top) { on = true; break; }
+    }
+    if (!force && on === last) return;
+    last = on;
+    nav.classList.toggle('nav--field', on);
+  }
 
-  let resizeTimer = null;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(build, 200);
+  measure();
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; update(false); });
   }, { passive: true });
+
+  let remeasureTimer = null;
+  const remeasure = () => { clearTimeout(remeasureTimer); remeasureTimer = setTimeout(measure, 150); };
+  window.addEventListener('resize', remeasure, { passive: true });
+  window.addEventListener('load', () => setTimeout(measure, 300));
+  if ('ResizeObserver' in window) new ResizeObserver(remeasure).observe(document.body);
 })();
