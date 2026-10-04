@@ -228,6 +228,59 @@ document.querySelectorAll('[data-parallax]').forEach((el) => {
   frame.appendChild(el);
 });
 
+// Build the two-layer wipe used by the image reveal.
+//
+// The reveal used to animate clip-path, which no browser composites — every
+// frame repainted the whole photograph, which is what made the reveals drop
+// frames on a phone. The same top-down wipe can be built from transforms,
+// which the compositor CAN animate on its own:
+//
+//   .wipe      overflow:hidden, translateY(-100%) -> 0
+//     .wipe__in            translateY(100%)  -> 0
+//       img / video        (parallax owns this transform, pointer devices only)
+//
+// Because overflow clips in the element's OWN transformed space, the clip
+// rectangle travels with .wipe while .wipe__in cancels the movement for the
+// photograph inside it. At the halfway point the clip rect covers the top
+// half of a photograph that has not moved at all — a wipe, not a slide. The
+// extra .wipe__in layer exists so that parallax can keep writing to the
+// image's own transform without the two fighting over one property.
+//
+// Must run before `reveals` is collected below, so the observer watches the
+// clipping element rather than the bare image.
+document.querySelectorAll('[data-reveal-type="image"]').forEach((el) => {
+  let host, subject;
+
+  if (el.classList.contains('parallax-frame')) {
+    // Already wrapped above; the frame carries the reveal attributes.
+    host    = el;
+    subject = el.firstElementChild;
+  } else {
+    // A photograph revealing without parallax — give it its own host and
+    // move the reveal attributes onto it.
+    host = document.createElement('div');
+    host.className = 'reveal-host';
+    host.setAttribute('data-reveal', el.getAttribute('data-reveal') || '');
+    host.setAttribute('data-reveal-type', 'image');
+    el.removeAttribute('data-reveal');
+    el.removeAttribute('data-reveal-type');
+    el.parentNode.insertBefore(host, el);
+    host.appendChild(el);
+    subject = el;
+  }
+
+  if (!subject) return;
+
+  const wipe  = document.createElement('div');
+  wipe.className = 'wipe';
+  const inner = document.createElement('div');
+  inner.className = 'wipe__in';
+
+  host.insertBefore(wipe, subject);
+  wipe.appendChild(inner);
+  inner.appendChild(subject);
+});
+
 const reveals = document.querySelectorAll('[data-reveal]');
 
 // Reveal helper — adds the class that drives the CSS transition, but if the
@@ -244,14 +297,11 @@ function markRevealed(el) {
     const inner = el.querySelector('.reveal-inner');
     if (inner) { inner.style.transition = 'none'; inner.style.transform = 'translateY(0)'; }
   } else if (type === 'image') {
-    // Covers both treatments: the clip wipe on pointer devices and the
-    // opacity/transform rise used on touch (see the coarse-pointer block in
-    // styles.css). Clearing only the clip-path would leave a touch device's
-    // photograph stuck at opacity 0.
-    el.style.transition = 'none';
-    el.style.clipPath = 'inset(0 0 0% 0)';
-    el.style.opacity = '1';
-    el.style.transform = 'none';
+    // Jump the wipe straight to its end state.
+    el.querySelectorAll('.wipe, .wipe__in').forEach((layer) => {
+      layer.style.transition = 'none';
+      layer.style.transform  = 'none';
+    });
   } else {
     el.style.transition = 'none';
     el.style.opacity = '1';

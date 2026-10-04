@@ -152,51 +152,63 @@ h1, h2, h3, p { margin: 0; }
 /* Line-by-line statement reveal */
 .reveal-line { display: block; }
 
-/* ---- image clip reveal ---- */
-.js [data-reveal-type="image"] {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 1000ms var(--ease-menu);
-  will-change: clip-path;
+/* ---- image wipe reveal ----
+   A top-down wipe over a stationary photograph, built from transforms rather
+   than clip-path. clip-path is not compositor-animatable, so the old version
+   repainted the full photograph on every frame of the reveal — fine on a
+   desktop GPU, the main source of dropped frames on a phone.
+   .wipe clips with overflow:hidden and travels up; because overflow clips in
+   the element's own transformed space, the clip rectangle travels with it,
+   while .wipe__in cancels that movement for the image inside. Net effect: the
+   visible band grows downward over a photograph that never moves — and both
+   layers animate only transform, which the compositor handles without
+   repainting. main.js builds the two layers; see the note there. */
+.js [data-reveal-type="image"] .wipe {
+  display: block;
+  overflow: hidden;
+  transform: translateY(-100%);
+  transition: transform 1000ms var(--ease-menu);
 }
-.js [data-reveal-type="image"].is-in { clip-path: inset(0 0 0% 0); }
+.js [data-reveal-type="image"] .wipe__in {
+  display: block;
+  transform: translateY(100%);
+  transition: transform 1000ms var(--ease-menu);
+}
+.js [data-reveal-type="image"].is-in .wipe,
+.js [data-reveal-type="image"].is-in .wipe__in { transform: translateY(0); }
+
+/* A photograph that reveals without parallax has no frame to clip in, so
+   main.js gives it a host. The host carries the reveal state and nothing
+   else — it must be transparent to whatever layout surrounded the image. */
+.reveal-host { display: block; width: 100%; }
+/* .corps-cell > .ph sizes the placeholder as a direct child; wrapping moves
+   it one level deeper, so restore that sizing here. */
+.reveal-host .ph { width: 100%; height: auto; }
 
 /* ---- parallax frame ---- */
 .parallax-frame { position: relative; overflow: hidden; }
-.js .parallax-frame > * { transform-origin: center center; will-change: transform; }
+/* parallax writes to the photograph itself; the .wipe layers between it and
+   the frame own their own transforms (see the image wipe above) */
+.js .parallax-frame img,
+.js .parallax-frame video { transform-origin: center center; will-change: transform; }
 /* scroll.js runs no parallax on touch devices (see the note there), so the
    compositor layer these would otherwise hold is pure memory cost on exactly
    the devices least able to spare it. */
 @media (hover: none) and (pointer: coarse) {
-  .js .parallax-frame > * { will-change: auto; }
-
-  /* The clip-path wipe is the remaining source of dropped frames on mobile.
-     clip-path is not a compositor-animatable property in any current browser,
-     so each of the ~60 frames repaints the whole photograph — a full-width
-     2000px image on a phone GPU. will-change can't promote it either, since
-     there is no layer the compositor could animate on its own.
-     Opacity and transform ARE composited, so on touch the photographs rise
-     and fade in instead of wiping down: the same beat, a shorter duration to
-     suit the smaller screen, and no repainting. Pointer devices keep the
-     wipe, where the repaint cost is affordable and the gesture reads better
-     against parallax. */
-  .js [data-reveal-type="image"] {
-    clip-path: none;
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
-    will-change: opacity, transform;
-  }
-  .js [data-reveal-type="image"].is-in {
-    opacity: 1;
-    transform: none;
-  }
+  /* scroll.js runs no parallax on touch devices (see the note there), so the
+     compositor layer this would otherwise hold is pure memory cost on exactly
+     the devices least able to spare it. The wipe itself is identical on every
+     device — it composites, so there is no reason to vary it. */
+  .js .parallax-frame img,
+  .js .parallax-frame video { will-change: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-reveal]:not([data-reveal-type]) { opacity: 1; transform: none; transition: none; }
   .js [data-reveal-type="mask"] { overflow: visible; padding-bottom: 0; }
   .js [data-reveal-type="mask"] .reveal-inner { transform: none; transition: none; }
-  .js [data-reveal-type="image"] { clip-path: none !important; transition: none; }
+  .js [data-reveal-type="image"] .wipe,
+  .js [data-reveal-type="image"] .wipe__in { transform: none !important; transition: none; }
   .js .parallax-frame > * { transform: none !important; }
 }
 

@@ -139,7 +139,10 @@ if (lite) {
   // ---- Parallax setup --------------------------------------------
   const parallaxPairs = [];
   document.querySelectorAll('.parallax-frame').forEach(frame => {
-    const inner = frame.firstElementChild;
+    // The frame's first child is now the .wipe layer built by main.js, which
+    // owns its own transform for the reveal. Parallax must write to the
+    // photograph itself or the two would fight over one property.
+    const inner = frame.querySelector('img, video') || frame.firstElementChild;
     if (inner) parallaxPairs.push({ frame, inner });
   });
 
