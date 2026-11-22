@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>YGREQ.STUDIO</title>
+  <meta name="description" content="YGREQ.STUDIO is a visual creative practice based in Sofia. Photography, creative direction and brand identity for a handful of brands and institutions each year." />
+
+  <meta property="og:title" content="YGREQ.STUDIO" />
+  <meta property="og:description" content="Excellent work goes unnoticed when nobody has thought about how it is shown. This is being thought about." />
+  <meta property="og:type" content="website" />
+
+  <!-- browser-chrome tint: the field is the home hero's black -->
+  <meta name="theme-color" content="#1A1B15" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Inter: board, links, label. DM Sans 600: the wordmark only -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=202611221200" />
+  <link rel="stylesheet" href="coming-soon.css?v=202611221400" />
+  <!-- coming-soon.js adds .cs-ready to <html> and only then are the board, the
+       aperture and the instruction shown. Without JS the page is the wordmark,
+       the line and the links. -->
+</head>
+<body class="page--ink cs-page">
+
+  <main class="cs">
+    <!-- the home hero's field, copied: Ember gradient + grain over --black -->
+    <div class="hero__media" aria-hidden="true"></div>
+    <canvas class="hero__grain" id="heroGrain" aria-hidden="true"></canvas>
+
+    <h1 class="visually-hidden">YGREQ.STUDIO</h1>
+
+    <div class="cs__stack">
+      <!-- Solari reel, built by hero-wordmark.js. data-overshoot: first play only,
+           STUDIO runs past its letters before settling. No JS: plain DM Sans text. -->
+      <div class="hero__wordmark cs__wordmark" aria-hidden="true">
+        <div class="hero__wordmark-row" id="heroWordmark" data-overshoot>YGREQ.STUDIO</div>
+      </div>
+
+      <!-- departures board, flipped by coming-soon.js -->
+      <div class="cs__board label" id="csBoard" aria-hidden="true">
+        <span class="cs__board-col cs__board-col--left" data-board="left">PHOTOGRAPHY</span>
+        <span class="cs__board-dot">&middot;</span>
+        <span class="cs__board-col cs__board-col--right" data-board="right">IN PREPARATION</span>
+      </div>
+
+      <!-- contact, centred under the board -->
+      <div class="cs__contact">
+        <a href="mailto:hello@ygreq.studio" class="contact-email">hello@ygreq.studio</a>
+        <div class="contact-social">
+          <a href="https://instagram.com/ygreq" rel="me noopener" target="_blank">Instagram</a>
+          <a href="https://www.linkedin.com/in/yassengrigorov/" rel="me noopener" target="_blank">LinkedIn</a>
+        </div>
+        <!-- the prompt: sits under the contact at first; with a mouse, it detaches
+             on the first move and follows the cursor (coming-soon.js) -->
+        <span class="cs__hold label" id="csHold" aria-hidden="true">Hold to expose</span>
+      </div>
+    </div>
+
+    <!-- the shutter: closed and empty until it opens -->
+    <p class="visually-hidden">A rotating glimpse of selected photographs</p>
+    <div class="cs__aperture" id="csAperture" aria-hidden="true">
+      <div class="cs__iris">
+        <img id="csFrame" alt="" decoding="async" />
+      </div>
+    </div>
+
+    <footer class="cs__foot">
+      <p class="cs__line">Excellent work goes unnoticed when nobody has thought about how it is shown. This is being thought about.</p>
+    </footer>
+  </main>
+
+  <script src="hero-wordmark.js?v=202611221400"></script>
+  <script src="coming-soon.js?v=202611221400"></script>
+</body>
+</html>

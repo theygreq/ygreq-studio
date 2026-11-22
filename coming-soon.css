@@ -1,0 +1,202 @@
+/* ============================================================
+   COMING SOON — "lens cap on"
+   One viewport, no scroll. The home hero's field; at the centre the
+   wordmark, the departures board and the contact; the line along the
+   bottom. Holding opens a shutter in the centre.
+   Tokens and shared components (.hero__media, .hero__grain, .reel*,
+   .contact-email, .contact-social, .label, .page--ink) come from
+   styles.css. Only what is specific to this page lives here.
+   ============================================================ */
+
+.cs {
+  /* the reveal's timings, read by coming-soon.js too so the two never drift:
+     the stack fades out, then the iris opens; on release the iris shuts, then
+     the stack fades back */
+  --cs-fade: 520ms;
+  --cs-iris: 900ms;
+
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 var(--gut) clamp(20px, 3.6vh, 40px);
+  background: var(--black);
+  color: var(--ink);
+  /* the field is a shutter button: no selection, no iOS long-press callout.
+     Links and the email get both back below. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+.cs a {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* ---- centre stack: wordmark, board, contact, prompt ----
+   The stack and the aperture share the centre. When the shutter opens, the
+   stack steps out first and the iris opens in its place, so type never sits
+   on a photograph; when it closes, the stack comes back. */
+.cs .cs__stack {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 2.8vh, 32px);
+  padding: 0 var(--gut);
+  pointer-events: none;
+  transition: opacity var(--cs-fade) var(--ease-menu) calc(var(--cs-iris) * 0.85);
+}
+.cs.is-exposed .cs__stack {
+  opacity: 0;
+  transition: opacity var(--cs-fade) var(--ease-menu) 0s;
+}
+/* the home hero centres the wordmark absolutely over the field; here it is
+   the stack's first line, as wide as the gutters allow, and gives way on
+   short screens so the page never scrolls */
+.cs .cs__wordmark {
+  position: static;
+  inset: auto;
+  padding: 0;
+  font-size: min(clamp(2.6rem, 14vw, 17rem), 26vh);
+}
+
+/* ---- departures board: one row, two columns around a fixed middle dot ---- */
+.cs__board {
+  display: none;
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: 0.9em;
+  width: 100%;
+  max-width: 48rem;
+  color: var(--ink); /* solid cream, not the wordmark's gradient */
+  line-height: 1;
+  white-space: nowrap;
+}
+.cs-ready .cs__board { display: grid; }
+.cs__board-col { display: flex; min-width: 0; }
+.cs__board-col--left  { justify-self: end; }
+.cs__board-col--right { justify-self: start; }
+.board__cell {
+  height: 1em;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  white-space: pre;
+}
+
+/* ---- contact, under the board ---- */
+.cs__contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: clamp(4px, 1.2vh, 14px);
+  pointer-events: auto;
+}
+.cs.is-exposed .cs__contact { pointer-events: none; }
+.cs .contact-email {
+  margin-top: 0;
+  font-size: clamp(1.15rem, 1.6vw, 1.6rem);
+  letter-spacing: -0.01em;
+}
+.cs .contact-social { margin-top: clamp(10px, 1.4vh, 14px); justify-content: center; }
+
+/* ---- shutter aperture: the centre of the field, empty until it opens ---- */
+.cs .cs__aperture {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.cs-ready .cs__aperture { display: flex; }
+.cs__iris {
+  display: flex;
+  justify-content: center;
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path var(--cs-iris) var(--ease-menu) 0s;
+}
+.cs.is-exposed .cs__iris {
+  clip-path: circle(75% at 50% 50%);
+  transition-delay: calc(var(--cs-fade) * 0.6); /* opens as the stack clears */
+}
+/* native ratio, never cropped: height capped, width follows. With the stack
+   out of the way the frame can take most of the screen, clear of the line. */
+.cs__iris img {
+  max-height: min(72vh, calc(100svh - 160px));
+  max-width: calc(100vw - 2 * var(--gut));
+  width: auto;
+  height: auto;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.cs__iris img:not([src]) { visibility: hidden; }
+
+/* ---- the prompt ----
+   Sits under the contact. With a mouse, it detaches on the first move and
+   follows the cursor (positioned by coming-soon.js), stepping away over links. */
+.cs__contact { position: relative; }
+/* out of the flow, so the stack stays centred whether or not it's here */
+.cs__hold {
+  display: none;
+  position: absolute;
+  top: calc(100% + clamp(14px, 2.6vh, 30px));
+  left: 50%;
+  translate: -50% 0;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.cs-ready .cs__hold { display: block; }
+.cs-ready .cs__hold.is-following {
+  position: fixed;
+  left: 0; top: 0;
+  translate: none;
+  font-size: 0.8rem;
+  color: var(--ink);
+  opacity: 0;
+  transition: opacity 240ms var(--ease-out);
+  will-change: transform;
+}
+.cs-ready .cs__hold.is-following.is-on { opacity: 0.82; }
+
+/* ---- foot: the line, one quiet row along the bottom ---- */
+.cs__foot {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  text-align: center;
+}
+.cs__line {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(0.95rem, 1.25vw, 1.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  /* too narrow for one line: let it wrap, still centred */
+  .cs__line { white-space: normal; max-width: 34ch; margin-inline: auto; }
+}
+@media (max-width: 760px) {
+  .cs__board { font-size: clamp(0.56rem, 2.5vw, 0.72rem); letter-spacing: 0.1em; column-gap: 0.7em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* no iris and no fades: the frame simply appears and disappears */
+  .cs .cs__stack, .cs.is-exposed .cs__stack,
+  .cs__iris, .cs.is-exposed .cs__iris { transition: none; }
+  .cs-ready .cs__hold { display: none; }
+}

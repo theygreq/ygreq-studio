@@ -6,37 +6,74 @@
 // Ported from the texture-lab exploration (Ember colourway).
 
 (function () {
+  // ---- shared reel mechanics ----
+  // One split-flap reel = a clipped slot holding a vertical strip of cells,
+  // tweened up with easeOutQuart. Exposed as window.YGREQReel so other
+  // boards (coming-soon.js) build the same reel rather than a copy of it.
+  const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  function randomGlyphs(n) {
+    const out = [];
+    for (let k = 0; k < n; k++) out.push(GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
+    return out;
+  }
+  function buildReel(cells, cellClass) {
+    const slot = document.createElement('span'); slot.className = 'reel';
+    const strip = document.createElement('span'); strip.className = 'reel__strip';
+    cells.forEach(g => {
+      const cell = document.createElement('span'); cell.className = cellClass || 'reel__cell';
+      cell.textContent = g;
+      strip.appendChild(cell);
+    });
+    slot.appendChild(strip);
+    slot.dataset.count = cells.length;
+    return slot;
+  }
+  function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+  // tween a strip's translateY from `from` to `to` (px); `done` fires once at the end
+  function tween(strip, to, dur, delayMs, from, done) {
+    from = from || 0;
+    const t0 = performance.now() + delayMs;
+    function step(now) {
+      let t = (now - t0) / dur;
+      if (t < 0) { requestAnimationFrame(step); return; }
+      if (t > 1) t = 1;
+      strip.style.transform = `translateY(${from + (to - from) * easeOutQuart(t)}px)`;
+      if (t < 1) requestAnimationFrame(step);
+      else if (done) done();
+    }
+    requestAnimationFrame(step);
+  }
+  window.YGREQReel = { GLYPHS, randomGlyphs, buildReel, tween, easeOutQuart };
+
   const host = document.getElementById('heroWordmark');
   if (!host) return;
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const WORD = 'YGREQ.STUDIO';
   const ANIM_FROM = 'YGREQ.'.length; // STUDIO starts here
-  const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-  function build() {
+  // Opt-in (data-overshoot on #heroWordmark, used by coming-soon.html):
+  // on the first play only, STUDIO's reels run 3–5 glyphs past the real
+  // letter and roll back to it, as if the board isn't quite ready.
+  // Self-replays are normal. Absent the attribute, nothing changes.
+  let overshootPending = host.hasAttribute('data-overshoot') && !reduce;
+
+  function build(overshoot) {
     host.innerHTML = '';
     [...WORD].forEach((ch, i) => {
-      const slot = document.createElement('span'); slot.className = 'reel';
-      const strip = document.createElement('span'); strip.className = 'reel__strip';
       const animated = i >= ANIM_FROM && ch !== '.';
-      let cells;
+      let cells, target = 0;
       if (animated) {
-        const steps = 9 + Math.floor(Math.random() * 6);
-        cells = [];
-        for (let k = 0; k < steps; k++) cells.push(GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
+        cells = randomGlyphs(9 + Math.floor(Math.random() * 6));
+        target = cells.length;
         cells.push(ch);
+        if (overshoot) cells.push(...randomGlyphs(3 + Math.floor(Math.random() * 3)));
       } else {
         cells = [ch];
       }
-      cells.forEach(g => {
-        const cell = document.createElement('span'); cell.className = 'reel__cell';
-        cell.textContent = g;
-        strip.appendChild(cell);
-      });
-      slot.appendChild(strip);
+      const slot = buildReel(cells, 'reel__cell');
       slot.dataset.animated = animated ? '1' : '0';
-      slot.dataset.count = cells.length;
+      slot.dataset.target = target;
       slot.dataset.order = i - ANIM_FROM;
       host.appendChild(slot);
     });
@@ -73,39 +110,41 @@
     });
   }
 
-  function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
-  function tween(strip, to, dur, delayMs) {
-    const t0 = performance.now() + delayMs;
-    function step(now) {
-      let t = (now - t0) / dur;
-      if (t < 0) { requestAnimationFrame(step); return; }
-      if (t > 1) t = 1;
-      strip.style.transform = `translateY(${to * easeOutQuart(t)}px)`;
-      if (t < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
   function play() {
     host.querySelectorAll('.reel').forEach(slot => {
       const strip = slot.firstChild;
       const n = +slot.dataset.count;
       if (slot.dataset.animated !== '1' || n < 2) return;
       const cellH = strip.querySelector('.reel__cell').getBoundingClientRect().height;
-      const dist = -(n - 1) * cellH;
+      const dist = -(+slot.dataset.target) * cellH;
       strip.style.transform = 'translateY(0)';
       if (reduce) { strip.style.transform = `translateY(${dist}px)`; return; }
       const order = +slot.dataset.order;
-      tween(strip, dist, 1150, 120 + order * 120);
+      const end = -(n - 1) * cellH;
+      if (end === dist) { tween(strip, dist, 1150, 120 + order * 120); return; }
+      // overshoot: run to the last spare glyph, catch, roll back to the letter
+      tween(strip, end, 1150, 120 + order * 120, 0, () => tween(strip, dist, 820, 260, end));
     });
   }
 
   function trigger() {
-    build();
+    build(overshootPending);
+    overshootPending = false;
     requestAnimationFrame(() => { layout(); requestAnimationFrame(play); });
   }
 
-  trigger();
+  // With the overshoot (first-load) path, wait for the wordmark's own font
+  // before measuring: measured in the fallback, the slots are the wrong widths
+  // and every letter jumps when DM Sans swaps in mid-roll. Capped at 1.5 s.
+  if (overshootPending && document.fonts && document.fonts.load) {
+    host.style.visibility = 'hidden';
+    const font = `600 1em ${getComputedStyle(host).fontFamily}`;
+    Promise.race([document.fonts.load(font), new Promise(r => setTimeout(r, 1500))])
+      .catch(() => {})
+      .then(() => { host.style.visibility = ''; trigger(); });
+  } else {
+    trigger();
+  }
 
   const heroSection = document.querySelector('.hero');
   let heroInView = true, wasOut = false;
