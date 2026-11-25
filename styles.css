@@ -65,10 +65,7 @@
   /* display serif — Gambarino; applied to expressive type only */
   --font-display: 'Gambarino', serif;
 
-  /* menu overlay: idx-column width + link gap, shared so .menu-item__children
-     can always align flush under the label regardless of viewport width —
-     see .menu-item__idx / .menu-item__link / .menu-item__children below */
-  --menu-idx-w:   16px;
+  /* menu overlay: gap between a label and its count */
   --menu-item-gap: clamp(14px, 2vw, 24px);
 }
 
@@ -125,6 +122,39 @@ h1, h2, h3, p { margin: 0; }
   text-transform: uppercase;
   color: var(--muted);
   font-weight: 500;
+}
+
+/* ---- section heads ----
+   Sentence case at reading size, in the section's own ink. Where a head
+   opens a full-width wrap (.margin-head) it sits in the left margin column,
+   the same column and gap as the home page's Approach section, so every
+   head on the site hangs on one line. */
+.section-head {
+  display: block;
+  font-size: clamp(0.98rem, 1.1vw, 1.08rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+.section-head + p { margin-top: 18px; }
+.pillar > .section-head { margin-bottom: 0.5em; }
+.pillar > .section-head + p { margin-top: 0; }
+.clients-inner > .section-head { margin-bottom: clamp(28px, 4vw, 48px); }
+@media (min-width: 821px) {
+  .wrap.margin-head {
+    display: grid;
+    grid-template-columns: clamp(100px, 16vw, 220px) minmax(0, 1fr);
+    column-gap: clamp(40px, 7vw, 100px);
+    align-items: baseline;
+  }
+  .margin-head > .section-head { grid-column: 1; margin: 0; }
+  .margin-head > :not(.section-head) { grid-column: 2; justify-self: start; }
+  .margin-head > .section-head + * { margin-top: 0; }
+}
+@media (max-width: 820px) {
+  .margin-head > .section-head { margin-bottom: 0.6em; }
+  .margin-head > .section-head + p { margin-top: 0; }
 }
 
 .lead { font-size: var(--fs-lead); line-height: 1.32; letter-spacing: -0.01em; }
@@ -300,10 +330,7 @@ body:has(.menu-overlay.is-closing) .nav {
 }
 
 .hero__foot {
-  /* bottom offset is the section-counter's own position plus clearance,
-     so the "01/09" counter (fixed, bottom-left, same gutter) never overlaps
-     the hero's label */
-  position: absolute; left: var(--gut); right: var(--gut); bottom: calc(clamp(22px, 4vw, 44px) + 30px);
+  position: absolute; left: var(--gut); right: var(--gut); bottom: clamp(22px, 4vw, 44px);
   display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;
   color: rgba(255,255,255,0.72);
   mix-blend-mode: difference;
@@ -375,11 +402,11 @@ section { position: relative; }
   background: var(--paper);
   padding: clamp(26px, 4vw, 52px) clamp(20px, 3vw, 36px);
   min-height: clamp(150px, 18vw, 230px);
-  display: flex; flex-direction: column; justify-content: space-between;
+  display: flex; flex-direction: column; justify-content: flex-end;
   position: relative;
   overflow: hidden;
 }
-.disc__num, .disc__name { position: relative; z-index: 1; }
+.disc__name { position: relative; z-index: 1; }
 .disc__img {
   position: absolute;
   inset: 0;
@@ -404,7 +431,6 @@ section { position: relative; }
 }
 .disc__item:hover .disc__img { opacity: 1; transform: scale(1); }
 .disc__item:hover::before { opacity: 1; }
-.disc__item:hover .disc__num,
 .disc__item:hover .disc__name { color: var(--cream); }
 /* Motion tile — the reveal is a silent looping clip rather than a still.
    <video> inherits .disc__img wholesale; this only kills the UA's own chrome. */
@@ -428,7 +454,6 @@ section { position: relative; }
 }
 .disc__item--mark:hover .disc__img--mark { transform: none; }
 .disc__item--mark:hover::before { opacity: 0; }   /* no gradient over a paper field */
-.disc__item--mark:hover .disc__num  { color: var(--muted); }
 .disc__item--mark:hover .disc__name { color: var(--ink); }
 
 /* No hover (phones, tablets): the reveal has nothing to trigger it, so the grid
@@ -439,8 +464,6 @@ section { position: relative; }
   img.disc__img, video.disc__img { opacity: 1; transform: none; }
   .disc__item:has(img.disc__img)::before,
   .disc__item:has(video.disc__img)::before { opacity: 1; }
-  .disc__item:has(img.disc__img) .disc__num,
-  .disc__item:has(video.disc__img) .disc__num,
   .disc__item:has(img.disc__img) .disc__name,
   .disc__item:has(video.disc__img) .disc__name { color: var(--cream); }
 
@@ -448,11 +471,9 @@ section { position: relative; }
      to carry :has() as well — without it they lose to the rules above, whose
      :has(img.disc__img) makes them a specificity step more specific. */
   .disc__item--mark:has(img.disc__img)::before { opacity: 0; }
-  .disc__item--mark:has(img.disc__img) .disc__num  { color: var(--muted); }
   .disc__item--mark:has(img.disc__img) .disc__name { color: var(--ink); }
 }
 
-.disc__num { font-size: var(--fs-label); letter-spacing: var(--ls-label); color: var(--muted); transition: color var(--dur-micro) var(--ease-out); }
 .disc__name { font-size: clamp(1.25rem, 2.1vw, 1.9rem); letter-spacing: -0.01em; transition: color var(--dur-micro) var(--ease-out); }
 
 /* ---- display serif (Gambarino) — expressive type only ----
@@ -679,8 +700,6 @@ section { position: relative; }
   transition: transform .35s cubic-bezier(.16,1,.3,1), background .35s;
 }
 .btn:hover { transform: translateY(-2px); background: var(--accent-strong); }
-.btn .arr { transition: transform .35s cubic-bezier(.16,1,.3,1); }
-.btn:hover .arr { transform: translateX(4px); }
 
 /* footer — uses section--ink class in HTML for dark background */
 .footer { padding-block: clamp(40px, 6vw, 70px); border-top: 1px solid var(--line); color: var(--ink); }
@@ -836,15 +855,6 @@ section { position: relative; }
   text-decoration: none;
   transition: opacity var(--dur-std) var(--ease-out);
 }
-.menu-item__idx {
-  width: var(--menu-idx-w); /* fixed, not intrinsic — .menu-item__children's
-    indent below adds up to exactly this + the gap, so it can't drift */
-  font-size: var(--fs-label);
-  letter-spacing: var(--ls-label);
-  color: rgba(236, 231, 221, 0.35);
-  flex-shrink: 0;
-  transition: color var(--dur-std) var(--ease-out);
-}
 .menu-item__label {
   font-size: clamp(2.6rem, 7.5vw, 9rem);
   font-weight: 500;
@@ -873,7 +883,6 @@ section { position: relative; }
   opacity: 0.2;
 }
 .menu-item__link:hover .menu-item__label { transform: translateX(clamp(10px, 1.5vw, 22px)); }
-.menu-item__link:hover .menu-item__idx { color: rgba(236, 231, 221, 0.7); }
 
 /* nested project links under "The Work" — always visible once the overlay is
    open, no toggle/expand. Comma-separated run (Oviedo's "Projects (10)" pattern),
@@ -884,10 +893,8 @@ section { position: relative; }
   display: block; /* wraps like a paragraph across the available width */
   list-style: none;
   margin: 2px 0 clamp(16px, 2.4vw, 24px);
-  /* idx width + link gap (same custom properties .menu-item__link and
-     .menu-item__idx use, so it never drifts out of alignment), plus a
-     touch extra so it reads as tucked in under the label, not flush edge */
-  padding-left: calc(var(--menu-idx-w) + var(--menu-item-gap) + 10px);
+  /* a touch in from the label's edge, so it reads as tucked in under it */
+  padding-left: 10px;
 }
 .menu-item__children li { display: inline; }
 .menu-item__children li:not(:last-child)::after {
@@ -1052,25 +1059,6 @@ section { position: relative; }
 }
 
 /* ============================================================
-   SECTION COUNTER
-   ============================================================ */
-.section-counter {
-  position: fixed;
-  bottom: clamp(22px, 4vw, 44px);
-  left: var(--gut);
-  z-index: 30;
-  font-size: var(--fs-label);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  mix-blend-mode: difference;
-  color: #fff;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-.js .section-counter { opacity: 1; }
-
-/* ============================================================
    FEATURED WORK SECTION
    ============================================================ */
 .work-section__header {
@@ -1160,7 +1148,6 @@ section { position: relative; }
    CLIENTS & RECOGNITION
    ============================================================ */
 .clients-inner { max-width: none; }
-.clients-inner > .label { display: block; margin-bottom: clamp(28px, 4vw, 48px); }
 .clients-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1408,8 +1395,17 @@ section { position: relative; }
 .case-next__link[href="corps.html"]          { color: var(--red-corps); }
 .case-next__link[href="exemplary-home.html"] { color: var(--red-exemplary-home); }
 
-.case-next__link .arr { display: inline-block; transition: transform .35s cubic-bezier(.16,1,.3,1); }
-.case-next__link:hover .arr { transform: translateX(10px); }
+/* text links say what they are: a fine underline that firms up on hover */
+.case-next__link,
+.about-teaser__more {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  transition: text-decoration-color var(--dur-std) var(--ease-out), opacity .2s;
+}
+.case-next__link:hover,
+.about-teaser__more:hover { text-decoration-color: currentColor; }
 
 /* ============================================================
    CORPS — image-led project page
@@ -1585,9 +1581,6 @@ section { position: relative; }
     padding-top: clamp(100px, 20vw, 140px);
   }
   .menu-overlay__media { display: none; }
-  /* no mobile override needed — .menu-item__children's padding-left is
-     calc()-derived from --menu-idx-w + --menu-item-gap (both already resolve
-     correctly at narrow widths), so it stays flush with the label here too */
 
   /* work items */
   .work-item__link,

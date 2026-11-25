@@ -34,66 +34,6 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse  = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 const lite    = reduced || coarse;
 
-// ---- Section counter -------------------------------------------
-// Section tops are measured once and cached, rather than re-read from the
-// layout on every call: the old version ran a getBoundingClientRect over
-// every section on every frame, which is a forced layout per section per
-// frame. Re-measured on resize, after load (images settle late and move
-// everything below them) and on any body resize.
-function initSectionCounter() {
-  const allSections    = [...document.querySelectorAll('section')];
-  const counterCurrent = document.getElementById('counterCurrent');
-  const counterTotal   = document.getElementById('counterTotal');
-  if (!allSections.length || !counterCurrent || !counterTotal) return null;
-
-  counterTotal.textContent = String(allSections.length).padStart(2, '0');
-
-  let tops = [];
-  function measure() {
-    const y = window.scrollY;
-    tops = allSections.map(s => s.getBoundingClientRect().top + y);
-    lastY = -1;            // force the next update to re-evaluate
-  }
-
-  let lastY = -1, lastIdx = -1;
-  function updateCounter() {
-    const scrollY = window.scrollY;
-    if (scrollY === lastY) return;   // nothing moved — skip the whole pass
-    lastY = scrollY;
-    const mid = scrollY + window.innerHeight * 0.5;
-    let cur = 0;
-    for (let i = 0; i < tops.length; i++) if (tops[i] <= mid) cur = i;
-    if (cur === lastIdx) return;     // same section — skip the DOM write
-    lastIdx = cur;
-    counterCurrent.textContent = String(cur + 1).padStart(2, '0');
-  }
-
-  measure();
-  let measureTimer = null;
-  const remeasure = () => { clearTimeout(measureTimer); measureTimer = setTimeout(measure, 150); };
-  window.addEventListener('resize', remeasure, { passive: true });
-  window.addEventListener('load', () => setTimeout(measure, 300));
-  if ('ResizeObserver' in window) new ResizeObserver(remeasure).observe(document.body);
-
-  return updateCounter;
-}
-const updateSectionCounter = initSectionCounter();
-
-// Native 'scroll' drives the counter in lite mode, and also as a safety net
-// in full mode: Lenis suppresses some native scroll events on itself during
-// smooth-wheel animation, but the rAF loop covers that case, and this covers
-// the reverse (a stalled rAF loop in a throttled tab). updateCounter() now
-// early-exits when the scroll position has not changed, so the overlap is
-// genuinely free.
-if (updateSectionCounter) {
-  let counterTicking = false;
-  window.addEventListener('scroll', () => {
-    if (counterTicking) return;
-    counterTicking = true;
-    requestAnimationFrame(() => { counterTicking = false; updateSectionCounter(); });
-  }, { passive: true });
-}
-
 if (lite) {
   // No Lenis instance, and the module is never even fetched. Anything that
   // calls window.__lenis?.stop() / .start() (the menu overlay's scroll lock)
@@ -187,7 +127,6 @@ if (lite) {
       lastScroll = y;
       updateParallax();
       updateHeroExit(y);
-      if (updateSectionCounter) updateSectionCounter();
     }
     requestAnimationFrame(raf);
   }

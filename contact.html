@@ -48,10 +48,6 @@
   <!-- Page transition curtain — inert until transition.js drives it -->
   <div class="page-curtain" aria-hidden="true"></div>
 
-  <!-- Section counter — updated by scroll.js -->
-  <div class="section-counter" id="sectionCounter" aria-hidden="true">
-    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">02</span>
-  </div>
 
   <!-- NAV -->
   <header class="nav">
@@ -73,7 +69,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
-                <span class="menu-item__idx" aria-hidden="true">01</span>
                 <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
               </a>
               <ul class="menu-item__children" aria-label="The Work — projects">
@@ -86,7 +81,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
-                <span class="menu-item__idx" aria-hidden="true">02</span>
                 <span class="menu-item__label">About</span>
               </a>
             </div>
@@ -94,7 +88,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
-                <span class="menu-item__idx" aria-hidden="true">03</span>
                 <span class="menu-item__label">Contact</span>
               </a>
             </div>
@@ -136,9 +129,9 @@
   <!-- 01 EDITORIAL — statement, email as the headline, quiet social links.
        First section clears the fixed nav. -->
   <section class="section--tight section--first">
-    <div class="wrap contact-intro">
-      <span class="label" data-reveal>Engagement</span>
-      <p class="lead measure-wide" data-reveal data-reveal-type="mask" style="margin-top:18px">A handful of brands and institutions each year. Commissions, collaborations, and retained partnerships — across photography, creative direction, and identity. Pricing isn't published; it's a conversation. The only real criterion is whether I'd already be a customer of the brand in question.</p>
+    <div class="wrap contact-intro margin-head">
+      <span class="section-head" data-reveal>Engagement</span>
+      <p class="lead measure-wide" data-reveal data-reveal-type="mask">A handful of brands and institutions each year. Commissions, collaborations, and retained partnerships — across photography, creative direction, and identity. Pricing isn't published; it's a conversation. The only test is whether I'd already be a customer of the brand in question.</p>
 
       <!-- PLACEHOLDER — confirm the real address with Yassen before launch -->
       <a href="mailto:hello@ygreq.studio" class="contact-email" data-reveal data-reveal-type="mask">hello@ygreq.studio</a>
@@ -198,7 +191,7 @@
             <span class="field__error" id="message-error" aria-live="polite"></span>
           </div>
 
-          <button type="submit" class="btn contact-form__submit">Send <span class="arr">→</span></button>
+          <button type="submit" class="btn contact-form__submit">Send</button>
         </div>
 
         <p class="contact-form__status" role="status" aria-live="polite" hidden></p>

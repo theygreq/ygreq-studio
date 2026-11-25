@@ -48,10 +48,6 @@
   <!-- Page transition curtain — inert until transition.js drives it -->
   <div class="page-curtain" aria-hidden="true"></div>
 
-  <!-- Section counter — updated by scroll.js -->
-  <div class="section-counter" id="sectionCounter" aria-hidden="true">
-    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">08</span>
-  </div>
 
   <!-- NAV -->
   <header class="nav">
@@ -73,7 +69,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
-                <span class="menu-item__idx" aria-hidden="true">01</span>
                 <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
               </a>
               <ul class="menu-item__children" aria-label="The Work — projects">
@@ -86,7 +81,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
-                <span class="menu-item__idx" aria-hidden="true">02</span>
                 <span class="menu-item__label">About</span>
               </a>
             </div>
@@ -94,7 +88,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
-                <span class="menu-item__idx" aria-hidden="true">03</span>
                 <span class="menu-item__label">Contact</span>
               </a>
             </div>
@@ -143,8 +136,8 @@
 
   <!-- 02 PROJECT -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Project</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Project</span>
       <p class="case-prose measure-wide" data-reveal>Exemplary Home is a documentary project exploring rural north-western Bulgaria — a region shaped by communism, abandoned by the post-Soviet rush to globalise, and largely overlooked by the country it belongs to. Shot on medium format film over winter and spring 2019–2020, the work won 2nd place at the International Photography Awards, 3rd at the Bulgarian Photography Awards, and was the basis of my first solo exhibition at KO-OP, Sofia.</p>
     </div>
     <div class="wrap case-media">
@@ -154,16 +147,16 @@
 
   <!-- 03 ORIGIN -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Origin</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Origin</span>
       <p class="case-prose measure-wide" data-reveal>The project began as a personal reckoning. After seven years in London, my view of Bulgaria had calcified into something distant and frustrated. The challenge was to return to the country honestly — without nostalgia, without resentment — and to find a way of representing it that didn't flatten its complexity into either lament or romance.</p>
     </div>
   </section>
 
   <!-- 04 METHOD — sticky case-meta rail alongside body copy -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Method</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Method</span>
     </div>
     <div class="wrap case-layout" style="margin-top:clamp(24px,3vw,36px)">
       <div class="case-meta" data-reveal>
@@ -190,8 +183,8 @@
 
   <!-- 05 OUTCOME — prose + media wall -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Outcome</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Outcome</span>
       <p class="case-prose measure-wide" data-reveal>The final body of work brings together environmental images, interiors, portraits, and details — sequenced to read as an extended piece of writing rather than a series of single frames. Shown across large framed prints and smaller loose photographs at KO-OP, the exhibition was designed to mirror the way memory and place actually work: layered, uneven, returned to repeatedly.</p>
     </div>
     <div class="wrap case-gallery">
@@ -216,8 +209,8 @@
 
   <!-- 06 RECOGNITION -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Recognition</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Recognition</span>
       <ul class="case-list" data-reveal>
         <li>2nd place, International Photography Awards 2020</li>
         <li>3rd place, Bulgarian Photography Awards 2021</li>
@@ -230,17 +223,17 @@
 
   <!-- 07 REFLECTION -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Reflection</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Reflection</span>
       <p class="case-prose measure-wide" data-reveal>Exemplary Home set the principles the rest of the practice runs on: slowness, attention, and a personal investment that doesn't apologise for being there. The work is sharper when I'm fully in it — and I've structured the practice so I can be.</p>
     </div>
   </section>
 
   <!-- 08 NEXT — takes the destination's field: Pride and Prejudice's poster navy -->
   <section class="section section--pride-and-prejudice case-next">
-    <div class="wrap case-next__body">
-      <span class="label" data-reveal>Next</span>
-      <a class="case-next__link" href="pride-and-prejudice.html" data-reveal data-reveal-type="mask">Pride and Prejudice <span class="arr">→</span></a>
+    <div class="wrap case-next__body margin-head">
+      <span class="section-head" data-reveal>Next</span>
+      <a class="case-next__link" href="pride-and-prejudice.html" data-reveal data-reveal-type="mask">Pride and Prejudice</a>
     </div>
   </section>
 

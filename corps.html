@@ -49,10 +49,6 @@
   <!-- Page transition curtain — inert until transition.js drives it -->
   <div class="page-curtain" aria-hidden="true"></div>
 
-  <!-- Section counter — updated by scroll.js -->
-  <div class="section-counter" id="sectionCounter" aria-hidden="true">
-    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">12</span>
-  </div>
 
   <!-- NAV -->
   <header class="nav">
@@ -74,7 +70,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
-                <span class="menu-item__idx" aria-hidden="true">01</span>
                 <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
               </a>
               <ul class="menu-item__children" aria-label="The Work — projects">
@@ -87,7 +82,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
-                <span class="menu-item__idx" aria-hidden="true">02</span>
                 <span class="menu-item__label">About</span>
               </a>
             </div>
@@ -95,7 +89,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
-                <span class="menu-item__idx" aria-hidden="true">03</span>
                 <span class="menu-item__label">Contact</span>
               </a>
             </div>
@@ -148,8 +141,8 @@
 
   <!-- 02 STATEMENT — narrow reading measure, no image competition -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <h2 class="label case-section__eyebrow" data-reveal>Statement</h2>
+    <div class="wrap margin-head">
+      <h2 class="section-head case-section__eyebrow" data-reveal>Statement</h2>
       <p class="case-prose measure-read" data-reveal>Corps is a documentary project made with the ballet company of the Sofia Opera and Ballet. What drew me to it wasn't ballet as a subject, but the dancers — people who turn up every day to do the same thing they did yesterday, better.</p>
       <p class="case-prose measure-read" data-reveal style="margin-top:clamp(18px,2.4vw,28px)">I struggle with repetitive, predictable work. A whole cohort of people who don't is magnetic. I was drawn in particular to the corps de ballet — the literal body of a company, tens of people who stay largely unknown to the public. Many will never have their turn in the spotlight, through bad luck, injury, or simply being overlooked. The question I started with was: why do it?</p>
       <p class="case-prose measure-read" data-reveal style="margin-top:clamp(18px,2.4vw,28px)">What I found was a group of fiercely disciplined people whose focus on perfection isn't for an audience, or even for each other. Marta Petkova, the company's prima, told me the only person she has ever danced for is herself — you get up every morning and go to battle against yourself. Any day that ends without her feeling she has pushed her limits is a rest day.</p>
@@ -161,8 +154,8 @@
 
   <!-- 03 METADATA — the .case-meta pairs, laid out as a standalone horizontal rail -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <h2 class="label case-section__eyebrow" data-reveal>Metadata</h2>
+    <div class="wrap margin-head">
+      <h2 class="section-head case-section__eyebrow" data-reveal>Metadata</h2>
       <div class="case-meta case-meta--grid" data-reveal>
         <div class="case-meta__item">
           <span class="label">Project</span>
@@ -204,25 +197,25 @@
 
   <!-- 05 PROCESS NOTE — method, in the same reading measure -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <h2 class="label case-section__eyebrow" data-reveal>Process</h2>
+    <div class="wrap margin-head">
+      <h2 class="section-head case-section__eyebrow" data-reveal>Process</h2>
       <p class="case-prose measure-read" data-reveal>Two kinds of distance. Optical: a long lens on the rehearsal floor, where moving closer would interrupt the work. Physical: a 50mm at the edges of the day — warm-ups, breaks, waiting, shoes being broken in — as trust makes proximity possible. Colour and monochrome are decided frame by frame in post rather than as a house style: monochrome where gesture and grain carry it, colour where colour is information.</p>
     </div>
   </section>
 
   <!-- 06 ONGOING -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <h2 class="label case-section__eyebrow" data-reveal>Ongoing</h2>
+    <div class="wrap margin-head">
+      <h2 class="section-head case-section__eyebrow" data-reveal>Ongoing</h2>
       <p class="case-prose measure-read" data-reveal>The edit is open and the work is continuing. If you are thinking about exhibition, publication, or a collaboration, I would be glad to talk.</p>
     </div>
   </section>
 
   <!-- 07 NEXT — takes the destination's field: The Work is clay -->
   <section class="section section--clay-cream case-next">
-    <div class="wrap case-next__body">
-      <span class="label" data-reveal>Next</span>
-      <a class="case-next__link" href="work.html" data-reveal data-reveal-type="mask">The Work <span class="arr">→</span></a>
+    <div class="wrap case-next__body margin-head">
+      <span class="section-head" data-reveal>Next</span>
+      <a class="case-next__link" href="work.html" data-reveal data-reveal-type="mask">The Work</a>
     </div>
   </section>
 

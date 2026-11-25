@@ -167,10 +167,10 @@ window.CORPS_SEQUENCES = [
 
     // heading (+ optional caption)
     var head = document.createElement('div');
-    head.className = 'wrap';
+    head.className = 'wrap margin-head';
 
     var h2 = document.createElement('h2');
-    h2.className = 'label case-section__eyebrow';
+    h2.className = 'section-head case-section__eyebrow';
     h2.setAttribute('data-reveal', '');
     h2.textContent = section.heading;
     head.appendChild(h2);

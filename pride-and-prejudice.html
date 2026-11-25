@@ -48,10 +48,6 @@
   <!-- Page transition curtain — inert until transition.js drives it -->
   <div class="page-curtain" aria-hidden="true"></div>
 
-  <!-- Section counter — updated by scroll.js -->
-  <div class="section-counter" id="sectionCounter" aria-hidden="true">
-    <span id="counterCurrent">01</span>&thinsp;/&thinsp;<span id="counterTotal">08</span>
-  </div>
 
   <!-- NAV -->
   <header class="nav">
@@ -73,7 +69,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="work.html" class="menu-item__link" data-for="work" data-category="work">
-                <span class="menu-item__idx" aria-hidden="true">01</span>
                 <span class="menu-item__label">The Work<span class="menu-item__count" data-count-for=".menu-item__children" aria-hidden="true"></span></span>
               </a>
               <ul class="menu-item__children" aria-label="The Work — projects">
@@ -86,7 +81,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="about.html" class="menu-item__link" data-for="about" data-category="about">
-                <span class="menu-item__idx" aria-hidden="true">02</span>
                 <span class="menu-item__label">About</span>
               </a>
             </div>
@@ -94,7 +88,6 @@
           <li class="menu-item">
             <div class="menu-item__inner">
               <a href="contact.html" class="menu-item__link" data-for="contact" data-category="contact">
-                <span class="menu-item__idx" aria-hidden="true">03</span>
                 <span class="menu-item__label">Contact</span>
               </a>
             </div>
@@ -143,8 +136,8 @@
 
   <!-- 02 PROJECT -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Project</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Project</span>
       <p class="case-prose measure-wide" data-reveal>Sofia Opera and Ballet × British Embassy Sofia — Pride and Prejudice, World Premiere.</p>
     </div>
     <div class="wrap case-media">
@@ -154,16 +147,16 @@
 
   <!-- 03 ORIGIN -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Origin</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Origin</span>
       <p class="case-prose measure-wide" data-reveal>An opportunity came in through the British Council: the Sofia Opera and Ballet was staging the world premiere of a ballet adaptation of Pride and Prejudice, choreographed by Leo Mujić. There was scope for a collaboration with the Embassy. What started as a routine cultural diplomacy brief became something more ambitious once I took ownership of it — proposing a collaborative marketing approach that would treat the premiere as a shared cultural moment, not a sponsorship logo on a poster.</p>
     </div>
   </section>
 
   <!-- 04 METHOD — sticky case-meta rail alongside case-blocks -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Method</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Method</span>
     </div>
     <div class="wrap case-layout" style="margin-top:clamp(24px,3vw,36px)">
       <div class="case-meta" data-reveal>
@@ -213,8 +206,8 @@
 
   <!-- 05 OUTCOME -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Outcome</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Outcome</span>
       <ul class="case-list" data-reveal>
         <li>Official poster imagery for the world premiere of Pride and Prejudice</li>
         <li>Embassy-led visit to the raw rehearsal, attended by the Ambassador — the first time the Opera had hosted a head of mission at that stage of production</li>
@@ -227,25 +220,25 @@
 
   <!-- 06 RECOGNITION -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Recognition</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Recognition</span>
       <p class="case-prose measure-wide" data-reveal>The Sofia Opera and Ballet expressed that this marked the first time a foreign mission of this seniority had engaged so closely with the institution's working process — a recognition that has opened the door to ongoing collaboration with their leadership.</p>
     </div>
   </section>
 
   <!-- 07 REFLECTION -->
   <section class="section--tight case-section">
-    <div class="wrap">
-      <span class="label case-section__eyebrow" data-reveal>Reflection</span>
+    <div class="wrap margin-head">
+      <span class="section-head case-section__eyebrow" data-reveal>Reflection</span>
       <p class="case-prose measure-wide" data-reveal>Pride and Prejudice was the project that crystallised what YGREQ.STUDIO does. It wasn't about producing a single beautiful image — it was about reading what an institution needed, proposing a way of working that respected its authority while bringing something new, and managing the production from idea to delivery. The Embassy got a campaign with real cultural weight. The Opera got attention from an audience it doesn't usually reach. Both got something neither could have produced alone. That's the work.</p>
     </div>
   </section>
 
   <!-- 08 NEXT — takes the destination's field: Corps runs on the dark field -->
   <section class="section section--ink case-next">
-    <div class="wrap case-next__body">
-      <span class="label" data-reveal>Next</span>
-      <a class="case-next__link" href="corps.html" data-reveal data-reveal-type="mask">Corps <span class="arr">→</span></a>
+    <div class="wrap case-next__body margin-head">
+      <span class="section-head" data-reveal>Next</span>
+      <a class="case-next__link" href="corps.html" data-reveal data-reveal-type="mask">Corps</a>
     </div>
   </section>
 
