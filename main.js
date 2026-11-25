@@ -283,6 +283,29 @@ document.querySelectorAll('[data-reveal-type="image"]').forEach((el) => {
 
 const reveals = document.querySelectorAll('[data-reveal]');
 
+// Lazy photographs inside a wipe never load in some contexts. Until it loads
+// an <img> here has no size (CSS sizes it auto, from the file), and the
+// wipe's overflow:hidden layers clip that empty box — so the browser's own
+// lazy-loading never sees it as on screen (reproduced in Chrome in an
+// iframe: revealed, still 0x0, never requested). Take loading out of the
+// browser's hands for these: start each one a screen before it's reached,
+// and at the latest when its reveal fires (see markRevealed).
+function loadNow(el) {
+  el.querySelectorAll('img[loading="lazy"]').forEach((img) => {
+    if (!img.complete) img.loading = 'eager';
+  });
+}
+const lazyWipes = [...document.querySelectorAll('[data-reveal-type="image"]')]
+  .filter((el) => el.querySelector('img[loading="lazy"]'));
+if ('IntersectionObserver' in window && lazyWipes.length) {
+  const preload = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) { loadNow(entry.target); preload.unobserve(entry.target); }
+    });
+  }, { rootMargin: '100% 0px 100% 0px' });
+  lazyWipes.forEach((el) => preload.observe(el));
+}
+
 // Reveal helper — adds the class that drives the CSS transition, but if the
 // document is in the Page Visibility 'hidden' state (some embedding/preview
 // contexts render in a technically-hidden iframe even while shown to the
@@ -291,6 +314,7 @@ const reveals = document.querySelectorAll('[data-reveal]');
 // straight to the revealed end state with no transition instead.
 function markRevealed(el) {
   el.classList.add('is-in');
+  if (el.getAttribute('data-reveal-type') === 'image') loadNow(el);
   if (!document.hidden) return;
   const type = el.getAttribute('data-reveal-type');
   if (type === 'mask') {
